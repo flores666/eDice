@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp.csproj", "{5589CF92-527B-422C-87FF-3D347FD36C94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication", "Authentication\Authentication.csproj", "{19D67C0A-FE0D-41D7-BD00-497CC375D6EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5589CF92-527B-422C-87FF-3D347FD36C94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5589CF92-527B-422C-87FF-3D347FD36C94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5589CF92-527B-422C-87FF-3D347FD36C94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5589CF92-527B-422C-87FF-3D347FD36C94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19D67C0A-FE0D-41D7-BD00-497CC375D6EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19D67C0A-FE0D-41D7-BD00-497CC375D6EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19D67C0A-FE0D-41D7-BD00-497CC375D6EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19D67C0A-FE0D-41D7-BD00-497CC375D6EE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
