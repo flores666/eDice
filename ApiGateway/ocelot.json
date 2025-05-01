@@ -1,0 +1,23 @@
+{
+  "Routes": [
+    {
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "UpstreamPathTemplate": "/auth/login",
+      "DownstreamPathTemplate": "/",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authorization",
+          "Port": 81
+        }
+      ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:5002"
+  },
+  "DynamicRoutes": [],
+  "Aggregates": []
+}

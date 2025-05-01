@@ -23,6 +23,16 @@
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
+  gateway:
+    build:
+      context: ./ApiGateway
+      dockerfile: Dockerfile
+    container_name: gateway
+    ports:
+      - "5002:82"
+    environment:
+      - ASPNETCORE_URLS=http://+:82
+
   webapp:
     build:
       context: ./WebApp
