@@ -23,14 +23,25 @@
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
+  webapp:
+    build:
+      context: ./WebApp
+      dockerfile: Dockerfile
+    container_name: webapp
+    ports:
+      - "5000:80"
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+
   authorization:
     build:
-      context: ./Authorization
+      context: ./Authorization.API
       dockerfile: Dockerfile
     container_name: authorization
     depends_on:
       - kafka
     ports:
-      - "5000:80"
+      - "5001:81"
     environment:
       - KAFKA__BOOTSTRAP_SERVERS=kafka:9092
+      - ASPNETCORE_URLS=http://+:81
