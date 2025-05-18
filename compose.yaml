@@ -23,6 +23,14 @@
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
+  reactwebapp:
+    build:
+      context: ./edicewebapp
+      dockerfile: Dockerfile
+    container_name: reactApp
+    ports:
+      - "5000:3000"
+  
   gateway:
     build:
       context: ./ApiGateway
@@ -32,16 +40,6 @@
       - "5002:82"
     environment:
       - ASPNETCORE_URLS=http://+:82
-
-  webapp:
-    build:
-      context: ./WebApp
-      dockerfile: Dockerfile
-    container_name: webapp
-    ports:
-      - "5000:80"
-    environment:
-      - ASPNETCORE_URLS=http://+:80
 
   authorization:
     build:
