@@ -29,7 +29,7 @@
       dockerfile: Dockerfile
     container_name: reactApp
     ports:
-      - "5000:3000"
+      - "5000:5173"
   
   gateway:
     build:
