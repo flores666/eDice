@@ -1,0 +1,17 @@
+.mini-profile-container {
+  display: flex;
+  gap: 32px;
+}
+.mini-profile-container.buttons {
+  gap: 12px;
+}
+.mini-profile-container img,
+.mini-profile-container .no-pic {
+  width: 50px;
+  height: 50px;
+}
+.mini-profile-container .no-pic {
+  background-color: #18181b;
+  border-radius: 50%;
+}
+/*# sourceMappingURL=MiniProfile.css.map */

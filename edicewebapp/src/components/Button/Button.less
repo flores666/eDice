@@ -1,0 +1,30 @@
+button {
+  padding: 0 1rem;
+  font-weight: 500;
+  border-width: thin;
+  
+  &.black {
+    background-color: black;
+    border-radius: 8px;
+    color: rgb(212 212 216);
+    
+    &:hover {
+      background-color: rgba(59, 59, 59, 0.56);
+      transition: background-color 0.3s ease;
+    }
+  }
+  
+  &.white {
+    background-color: white;
+    color: black;
+  }
+  
+  &.gray {
+    background-color: #18181b;
+
+    &:hover {
+      background-color: black;
+      transition: background-color 0.3s ease;
+    }
+  }
+}
