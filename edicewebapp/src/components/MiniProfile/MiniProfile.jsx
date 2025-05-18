@@ -23,7 +23,7 @@ function MiniProfile() {
         return (
             <div className='mini-profile-container buttons'>
                 <Button color='gray'>Войти</Button>
-                <Button color='white'>Зарегистрироваться</Button>
+                <Button color='white'>Регистрация</Button>
             </div>
         )
     }
