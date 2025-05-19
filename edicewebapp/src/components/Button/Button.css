@@ -18,6 +18,7 @@ button.white {
 }
 button.gray {
   background-color: #18181b;
+  color: #d4d4d8;
 }
 button.gray:hover {
   background-color: black;
