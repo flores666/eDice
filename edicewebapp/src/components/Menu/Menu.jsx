@@ -18,7 +18,7 @@ function Menu() {
                 </a>
                 <div className='play'>
                     <input placeholder='Введите ключ' onChange={(e) => setInputValue(e.target.value)}/>
-                    <Button className='btn' color={'black'} onClick={connectToLobby}>Подключиться</Button>
+                    <Button color={'black'} onClick={connectToLobby}>Подключиться</Button>
                 </div>
                 <MiniProfile></MiniProfile>
             </div>

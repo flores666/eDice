@@ -1,8 +1,8 @@
 import './Button.css'
 
-function Button({children, onClick, color, type = 'button'}) {
+function Button({children, className, color, ...props}) {
     return (
-        <button className={color} type={type} onClick={onClick}>{children}</button>
+        <button className={[className, color].join(' ')} {...props}>{children}</button>
     )
 }
 
