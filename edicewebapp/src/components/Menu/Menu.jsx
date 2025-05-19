@@ -1,15 +1,12 @@
 import './Menu.css'
 import MiniProfile from "../MiniProfile/MiniProfile.jsx";
 import Button from "../Button/Button.jsx";
+import {useState} from "react";
 
 function Menu() {
-    let userInput = ''
+    const [inputValue, setInputValue] = useState('content value')
     
     const connectToLobby = () => {
-    }
-    
-    const changeInput = (e) => {
-        userInput = e.target.value
     }
 
     return (
@@ -20,7 +17,7 @@ function Menu() {
                     <span>eDice</span>
                 </a>
                 <div className='play'>
-                    <input placeholder='Введите ключ' onChange={changeInput}/>
+                    <input placeholder='Введите ключ' onChange={(e) => setInputValue(e.target.value)}/>
                     <Button className='btn' color={'black'} onClick={connectToLobby}>Подключиться</Button>
                 </div>
                 <MiniProfile></MiniProfile>

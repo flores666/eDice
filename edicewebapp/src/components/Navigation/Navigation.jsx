@@ -1,5 +1,5 @@
 import './Navigation.css'
-import IconList from "../IconList.jsx";
+import NavigationList from "./NavigationList.jsx";
 
 function Navigation() {
     let menuItems = [
@@ -11,7 +11,7 @@ function Navigation() {
 
     return (
         <div className='navigation-container'>
-            <IconList items={menuItems}/>
+            <NavigationList items={menuItems}/>
         </div>
     )
 }

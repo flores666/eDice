@@ -9,7 +9,7 @@ button.black {
   color: #d4d4d8;
 }
 button.black:hover {
-  background-color: rgba(59, 59, 59, 0.56);
+  background-color: rgba(79, 79, 79, 0.56);
   transition: background-color 0.3s ease;
 }
 button.white {
