@@ -1,5 +1,5 @@
-import Navigation from "./Navigation/Navigation.jsx";
-import Menu from "./Menu/Menu.jsx";
+import Navigation from "./Layout/Navigation/Navigation.jsx";
+import Menu from "./Layout/Menu/Menu.jsx";
 
 function App() {
     return (

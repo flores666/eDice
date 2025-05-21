@@ -1,5 +1,5 @@
 import './MiniProfile.css'
-import Button from "../Button/Button.jsx";
+import Button from "../../Button/Button.jsx";
 
 function MiniProfile() {
     let isAuthenticated = false

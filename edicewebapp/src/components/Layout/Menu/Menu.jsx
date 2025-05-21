@@ -1,7 +1,7 @@
 import './Menu.css'
 import MiniProfile from "../MiniProfile/MiniProfile.jsx";
-import Button from "../Button/Button.jsx";
-import useInput from "../../Hooks/useInput.js";
+import Button from "/src/components/Button/Button.jsx";
+import useInput from "/src/Hooks/useInput.js";
 
 function Menu() {
     let input = useInput('');
