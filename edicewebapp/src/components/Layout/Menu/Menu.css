@@ -8,6 +8,7 @@
   border-radius: 0;
   background-color: black;
   z-index: 2;
+  margin-bottom: 25px;
 }
 .menu-container * {
   display: flex;

@@ -19,7 +19,7 @@ function Menu() {
                     <span>eDice</span>
                 </Link>
                 <div className='play'>
-                    <input placeholder='Введите ключ' {...input}/>
+                    <input className='secondary' placeholder='Введите ключ' {...input}/>
                     <Button color={'black'} onClick={connectToLobby}>Подключиться</Button>
                 </div>
                 <MiniProfile></MiniProfile>

@@ -1,5 +1,6 @@
 import './MiniProfile.css'
 import Button from "../../Button/Button.jsx";
+import {Link} from "react-router-dom";
 
 function MiniProfile() {
     let isAuthenticated = false
@@ -22,8 +23,8 @@ function MiniProfile() {
     let notAuthenticatedResult = () => {
         return (
             <div className='mini-profile-container buttons'>
-                <Button color='gray'>Войти</Button>
-                <Button color='white'>Регистрация</Button>
+                <Link to='/login'><Button color='gray'>Войти</Button></Link>
+                <Link to='/register'><Button color='white'>Регистрация</Button></Link>
             </div>
         )
     }

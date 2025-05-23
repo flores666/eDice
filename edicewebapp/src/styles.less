@@ -8,7 +8,7 @@
   src: url("/fonts/Rubik-Italic.ttf");
 }
 
-html, body {
+html, body, #root {
   background-color: black;
   font-family: "Rubik", serif;
   font-weight: 400;
@@ -23,12 +23,16 @@ body {
 
 h1, h2, h3, h4, h5 {
   font-weight: 500;
+  padding-bottom: .6em;
 }
 
 h1 {
   font-size: 3em;
-  text-transform: uppercase;
   font-weight: 700;
+}
+
+h2 {
+  font-size: 2em;
 }
 
 img {
@@ -38,7 +42,7 @@ img {
 .container {
   padding: 0 300px 0 300px;
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 90px);
 }
 
 ul {
@@ -78,9 +82,33 @@ input {
   line-height: 1.5 * 1em;
   transition: outline-color 0.3s ease;
   outline: rgba(0, 0, 0, 0) solid 2px;
-  background-color: #18181b;
-
+  
+  &.secondary {
+    background-color: #18181b;
+  }
+  
   &:focus {
     outline: rgba(255, 255, 255, 0.56) solid 2px;
   }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 6px;
+  margin-bottom: 16px;
+  
+  small {
+    color: rgba(255, 255, 255, 0.48);
+  }
+}
+
+label[data-required]::after {
+  content: ' *';
+  color: red;
+}
+
+.card {
+  border-radius: 12px;
 }

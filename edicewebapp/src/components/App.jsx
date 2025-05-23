@@ -9,6 +9,7 @@ import LibraryPage from "../pages/LibraryPage.jsx";
 import ConstructorPage from "../pages/ConstructorPage.jsx";
 import {MenuItems} from "./Layout/Navigation/NavigationItemsData.js";
 import NotFoundPage from "../pages/NotFoundPage.jsx";
+import RegisterPage from "../pages/RegisterPage.jsx";
 
 const routeComponents = {
     '/': <HomePage/>,
@@ -27,6 +28,7 @@ function App() {
                     {MenuItems.map(({href}) => (
                         <Route key={href} path={href} element={routeComponents[href]}/>
                     ))}
+                    <Route path='/register' element={<RegisterPage/>}></Route>
                     <Route path="*" element={<NotFoundPage/>}></Route>
                 </Routes>
             </Container>

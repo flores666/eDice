@@ -9,6 +9,7 @@
   transition: max-width 0.2s ease;
   z-index: 5;
   background-color: black;
+  user-select: none;
 }
 .navigation-container:hover a span:last-child {
   opacity: 1;
