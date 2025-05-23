@@ -1,4 +1,8 @@
+import {Link, useLocation} from "react-router-dom";
+
 function NavigationList({items}) {
+    const location = useLocation()
+    
     function isActive(href) {
         if (href === '/') return location.pathname === href ? 'active' : '';
         return location.pathname.startsWith(href) ? 'active' : ''
@@ -8,12 +12,12 @@ function NavigationList({items}) {
         <ul>
             {items.map((item, index) => (
                 <li key={index} className={isActive(item.href)}>
-                    <a href={item.href}>
+                    <Link to={item.href}>
                         <span>
                             <img src={item.image} alt='icon'/>
                         </span>
                         <span>{item.text}</span>
-                    </a>
+                    </Link>
                 </li>
             ))}
         </ul>

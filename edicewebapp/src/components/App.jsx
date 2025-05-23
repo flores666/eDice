@@ -1,13 +1,37 @@
 import Navigation from "./Layout/Navigation/Navigation.jsx";
 import Menu from "./Layout/Menu/Menu.jsx";
+import Container from "./Layout/Container/Container.jsx";
+import {Route, Routes} from "react-router-dom";
+
+import HomePage from "../pages/HomePage.jsx";
+import LobbyPage from "../pages/LobbyPage.jsx";
+import LibraryPage from "../pages/LibraryPage.jsx";
+import ConstructorPage from "../pages/ConstructorPage.jsx";
+import {MenuItems} from "./Layout/Navigation/NavigationItemsData.js";
+import NotFoundPage from "../pages/NotFoundPage.jsx";
+
+const routeComponents = {
+    '/': <HomePage/>,
+    '/lobby': <LobbyPage/>,
+    '/library': <LibraryPage/>,
+    '/constructor': <ConstructorPage/>,
+};
 
 function App() {
     return (
         <>
-            <Menu></Menu>
-            <Navigation></Navigation>
+            <Menu/>
+            <Navigation/>
+            <Container>
+                <Routes>
+                    {MenuItems.map(({href}) => (
+                        <Route key={href} path={href} element={routeComponents[href]}/>
+                    ))}
+                    <Route path="*" element={<NotFoundPage/>}></Route>
+                </Routes>
+            </Container>
         </>
-    )
+    );
 }
 
 export default App

@@ -2,6 +2,7 @@ import './Menu.css'
 import MiniProfile from "../MiniProfile/MiniProfile.jsx";
 import Button from "/src/components/Button/Button.jsx";
 import useInput from "/src/Hooks/useInput.js";
+import {Link} from "react-router-dom";
 
 function Menu() {
     let input = useInput('');
@@ -13,10 +14,10 @@ function Menu() {
     return (
         <div className='menu-container'>
             <div className='container'>
-                <a className='logo' href='/'>
+                <Link className='logo' to='/'>
                     <img src='/public/logo_big.svg' alt='eDice'/>
                     <span>eDice</span>
-                </a>
+                </Link>
                 <div className='play'>
                     <input placeholder='Введите ключ' {...input}/>
                     <Button color={'black'} onClick={connectToLobby}>Подключиться</Button>
