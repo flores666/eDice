@@ -90,6 +90,10 @@ input:focus {
 .form-group small {
   color: rgba(255, 255, 255, 0.48);
 }
+.form-group .form-label-group .error {
+  float: right;
+  font-size: 13px;
+}
 label[data-required]::after {
   content: ' *';
   color: red;
