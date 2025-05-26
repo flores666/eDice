@@ -4,13 +4,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileService", "FileService\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat", "Chat\Chat.csproj", "{D3FD9298-8A53-44D2-8C0A-4C1B7E1F87A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntitiesConstructor", "EntitiesConstructor\EntitiesConstructor.csproj", "{2CFF6532-0C7B-4CF3-9871-DCAADD09E89D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetCrafter", "AssetCrafter\AssetCrafter.csproj", "{2CFF6532-0C7B-4CF3-9871-DCAADD09E89D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mailer", "Mailer\Mailer.csproj", "{5921CFA8-C569-4796-AAA1-B82D9255FEF9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequestSender", "RequestSender\RequestSender.csproj", "{87D3DE20-7F8D-4C94-AFE4-F3C424035E61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SessionsManager", "SessionsManager\SessionsManager.csproj", "{408A4C33-D533-4729-828D-D1859307F213}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobby", "Lobby\Lobby.csproj", "{408A4C33-D533-4729-828D-D1859307F213}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6923B99A-09E0-476C-BE5A-902B0D4656F7}"
 	ProjectSection(SolutionItems) = preProject
