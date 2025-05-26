@@ -22,14 +22,6 @@
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
-  reactwebapp:
-    build:
-      context: ./edicewebapp
-      dockerfile: Dockerfile
-    container_name: reactApp
-    ports:
-      - "5000:5173"
   
   gateway:
     build:
