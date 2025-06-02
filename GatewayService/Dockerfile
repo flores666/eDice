@@ -8,14 +8,14 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 COPY . .
-RUN dotnet restore "ApiGateway.csproj"
-RUN dotnet build "ApiGateway.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet restore "FileService.csproj"
+RUN dotnet build "GatewayService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "ApiGateway.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "GatewayService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ApiGateway.dll"]
+ENTRYPOINT ["dotnet", "GatewayService.dll"]

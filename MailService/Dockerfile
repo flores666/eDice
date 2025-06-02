@@ -9,13 +9,13 @@ WORKDIR /src
 
 # в контексте уже лежат все файлы проекта (csproj, Program.cs, Controllers и т.д.)
 COPY . .  
-RUN dotnet restore "AuthorizationService.csproj"
-RUN dotnet build   "AuthorizationService.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet restore "MailService.csproj"
+RUN dotnet build   "MailService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "AuthorizationService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "MailService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "AuthorizationService.dll"]
+ENTRYPOINT ["dotnet", "MailService.dll"]
