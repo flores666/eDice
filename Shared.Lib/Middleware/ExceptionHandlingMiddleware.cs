@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Shared.Logging;
 
-namespace Infrastructure.Common.Middleware;
+namespace Shared.Lib.Middleware;
 
 public class ExceptionHandlingMiddleware
 {

@@ -20,6 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Shared.Lib\Shared.Lib.csproj" />
       <ProjectReference Include="..\Shared.Logger\Shared.Logger.csproj" />
       <ProjectReference Include="..\Shared.Models\Shared.Models.csproj" />
     </ItemGroup>

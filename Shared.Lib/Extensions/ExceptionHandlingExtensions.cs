@@ -1,13 +1,14 @@
-﻿using Infrastructure.Common.Middleware;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
+using Shared.Lib.Middleware;
 
-namespace Infrastructure.Common.Extensions;
+namespace Shared.Lib.Extensions;
 
 public static class ExceptionHandlingExtensions
 {
     public static IApplicationBuilder UseExceptionHandlingMiddleware(this IApplicationBuilder builder)
     {
         builder.UseMiddleware<ExceptionHandlingMiddleware>();
+        
         return builder;
     }
 }

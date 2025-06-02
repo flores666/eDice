@@ -1,5 +1,5 @@
 using Authorization.API;
-using Infrastructure.Common.Extensions;
+using Shared.Lib.Extensions;
 using Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
