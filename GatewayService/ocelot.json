@@ -2,10 +2,10 @@
   "Routes": [
     {
       "UpstreamHttpMethod": [
-        "Get"
+        "Post"
       ],
-      "UpstreamPathTemplate": "/auth/login",
-      "DownstreamPathTemplate": "/",
+      "UpstreamPathTemplate": "/auth/{action}",
+      "DownstreamPathTemplate": "/{action}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
