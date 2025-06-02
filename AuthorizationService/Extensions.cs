@@ -1,3 +1,4 @@
+using Authorization.API.Services;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -34,5 +35,12 @@ public static class Extensions
         }
 
         return app;
+    }
+
+    public static IServiceCollection AddAuthorizationServices(this IServiceCollection serviceCollection)
+    {
+        serviceCollection.AddScoped<IAuthorizationManager, AuthorizationManager>();
+        
+        return serviceCollection;
     }
 }

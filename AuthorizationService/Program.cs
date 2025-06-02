@@ -1,14 +1,18 @@
 using Authorization.API;
+using Infrastructure.Common.Extensions;
 using Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAuthorizationServices();
 builder.AddDefaultHealthChecks();
 builder.Host.UseLogger();
 
 var app = builder.Build();
+
+app.UseExceptionHandlingMiddleware();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -21,6 +21,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Shared.Logger\Shared.Logger.csproj" />
+      <ProjectReference Include="..\Shared.Models\Shared.Models.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Repository\" />
     </ItemGroup>
 
 </Project>
