@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{7C5A9B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Models", "Shared.Models\Shared.Models.csproj", "{08E99E68-05CB-43B1-B3E4-3451C3BB2219}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Logging", "Shared.Logging\Shared.Logging.csproj", "{2DECEA69-F408-4ACB-A012-C292BCD02CCA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Logger", "Shared.Logger\Shared.Logger.csproj", "{2DECEA69-F408-4ACB-A012-C292BCD02CCA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Configuration", "Shared.Configuration\Shared.Configuration.csproj", "{095BED8B-8572-4E7B-9725-F3E9C8FD2A5B}"
 EndProject
