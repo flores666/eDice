@@ -1,7 +1,7 @@
-﻿using Authorization.API.Models;
+﻿using AuthorizationService.Models;
 using Shared.Models;
 
-namespace Authorization.API.Services;
+namespace AuthorizationService.Services;
 
 public interface IAuthorizationManager
 {

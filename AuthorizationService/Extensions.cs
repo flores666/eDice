@@ -1,8 +1,8 @@
-using Authorization.API.Services;
+using AuthorizationService.Services;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace Authorization.API;
+namespace AuthorizationService;
 
 public static class Extensions
 {
