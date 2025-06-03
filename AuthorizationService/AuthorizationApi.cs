@@ -25,9 +25,9 @@ public static class AuthorizationApi
         }
 
         var response = await authorizationManager.AuthenticateAsync(request);
-        if (response.IsSuccess) return Results.Ok();
+        if (response.IsSuccess) return Results.Ok(response);
 
-        return Results.Unauthorized();
+        return Results.Json(response, statusCode: StatusCodes.Status401Unauthorized);
     }
 
     private static async Task<IResult> Register(
@@ -40,8 +40,8 @@ public static class AuthorizationApi
         }
 
         var response = await authorizationManager.RegisterAsync(request);
-        if (response.IsSuccess) return Results.Ok();
+        if (response.IsSuccess) return Results.Ok(response);
 
-        return Results.Unauthorized();
+        return Results.Json(response, statusCode: StatusCodes.Status401Unauthorized);
     }
 }

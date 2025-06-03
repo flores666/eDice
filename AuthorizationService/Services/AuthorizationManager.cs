@@ -1,4 +1,5 @@
-﻿using AuthorizationService.Models;
+﻿using AuthorizationService.Helpers;
+using AuthorizationService.Models;
 using AuthorizationService.Repository;
 using Infrastructure.AuthorizationService.Models;
 using Microsoft.AspNetCore.Identity;
@@ -31,6 +32,9 @@ public class AuthorizationManager : IAuthorizationManager
             response.ErrorMessage = "Доступ к аккаунту ограничен. Попробуйте позже";
             return response;
         }
+
+        response.IsSuccess = true;
+        response.Data = JwtTokenGenerator.GenerateJwtToken(user);
         
         return response;
     }

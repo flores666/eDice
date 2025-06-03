@@ -17,9 +17,9 @@ public partial class User
 
     public bool EmailConfirmed { get; set; }
 
-    public string PasswordResetCode { get; set; } = null!;
+    public string? PasswordResetCode { get; set; }
 
-    public short FailedLoginCount { get; set; }
+    public short? FailedLoginCount { get; set; }
 
     public DateTime? DisabledBefore { get; set; }
 }
