@@ -1,5 +1,4 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
 WORKDIR /app
 EXPOSE 81
 
@@ -8,12 +7,18 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # в контексте уже лежат все файлы проекта (csproj, Program.cs, Controllers и т.д.)
-COPY . .  
-RUN dotnet restore "AuthorizationService.csproj"
-RUN dotnet build   "AuthorizationService.csproj" -c $BUILD_CONFIGURATION -o /app/build
+COPY AuthorizationService/ AuthorizationService/
+COPY Shared.Lib/ Shared.Lib/
+COPY Shared.Logger/ Shared.Logger/
+COPY Shared.Models/ Shared.Models/
+COPY Infrastructure.AuthorizationService/ Infrastructure.AuthorizationService/
+
+RUN dotnet restore "AuthorizationService/AuthorizationService.csproj"
+RUN dotnet build   "AuthorizationService/AuthorizationService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "AuthorizationService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "AuthorizationService/AuthorizationService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN ls -la /app/publish
 
 FROM base AS final
 WORKDIR /app

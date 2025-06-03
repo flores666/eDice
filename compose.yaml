@@ -25,7 +25,7 @@
       
   gateway:
     build:
-      context: ./ApiGateway
+      context: ./GatewayService
       dockerfile: Dockerfile
     container_name: gateway
     ports:
@@ -35,10 +35,10 @@
 
   authorization:
     build:
-      context: ./Authorization.API
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: AuthorizationService/Dockerfile
     env_file:
-      - .env
+      - ./AuthorizationService/.env
     container_name: authorization
     depends_on:
       - kafka
@@ -47,4 +47,3 @@
     environment:
       - KAFKA__BOOTSTRAP_SERVERS=kafka:9092
       - ASPNETCORE_URLS=http://+:81
-      - CONNECTION_STRING=${CONNECTION_STRING}

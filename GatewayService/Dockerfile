@@ -8,7 +8,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 COPY . .
-RUN dotnet restore "FileService.csproj"
+RUN dotnet restore "GatewayService.csproj"
 RUN dotnet build "GatewayService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
