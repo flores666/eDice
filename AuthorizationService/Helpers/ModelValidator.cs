@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Authorization.API.Helpers;
+namespace AuthorizationService.Helpers;
 
 public static class ModelValidator
 {

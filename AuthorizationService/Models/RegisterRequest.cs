@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Authorization.API.Models;
+namespace AuthorizationService.Models;
 
 public record RegisterRequest(
     [Required]

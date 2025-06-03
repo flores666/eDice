@@ -1,9 +1,9 @@
-using Authorization.API.Helpers;
-using Authorization.API.Models;
-using Authorization.API.Services;
+using AuthorizationService.Helpers;
+using AuthorizationService.Models;
+using AuthorizationService.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Authorization.API;
+namespace AuthorizationService;
 
 public static class AuthorizationApi
 {

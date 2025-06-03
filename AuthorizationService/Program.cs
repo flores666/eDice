@@ -1,4 +1,4 @@
-using Authorization.API;
+using AuthorizationService;
 using Shared.Lib.Extensions;
 using Shared.Logging;
 
