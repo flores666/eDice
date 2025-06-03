@@ -1,7 +1,6 @@
-﻿using AuthorizationService.DataTransferObjects;
-using AuthorizationService.Mappers;
-using AuthorizationService.Models;
+﻿using AuthorizationService.Models;
 using AuthorizationService.Repository;
+using Infrastructure.AuthorizationService.Models;
 using Microsoft.AspNetCore.Identity;
 using Shared.Models;
 
@@ -18,11 +17,21 @@ public class AuthorizationManager : IAuthorizationManager
 
     public async Task<OperationResult> AuthenticateAsync(LoginRequest request)
     {
-        var response = new OperationResult
-        {
-            ErrorMessage = "Пока что не реализовано, тестируем api"
-        };
+        var response = new OperationResult();
 
+        var user = await _usersRepository.GetUserAsync(request.Login);
+        if (user == null || new PasswordHasher<object>().VerifyHashedPassword(null, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
+        {
+            response.ErrorMessage = "Похоже, что пользователь с такими данными не существует";
+            return response;
+        }
+
+        if (DateTime.UtcNow < user.DisabledBefore)
+        {
+            response.ErrorMessage = "Доступ к аккаунту ограничен. Попробуйте позже";
+            return response;
+        }
+        
         return response;
     }
 
@@ -33,19 +42,19 @@ public class AuthorizationManager : IAuthorizationManager
         var user = await _usersRepository.GetUserAsync(request.Login);
         if (user != null)
         {
-            if (user.EmailConfirmed)
-                response.ErrorMessage = "Похоже, эта электронная почта уже зарегистрирована. Попробуйте войти или использовать другую";
-            else response.ErrorMessage = "Пожалуйста, подтвердите свою почту — мы отправили вам письмо с ссылкой";
+            response.ErrorMessage = user.EmailConfirmed 
+                ? "Похоже, эта электронная почта уже зарегистрирована. Попробуйте войти или использовать другую" 
+                : "Пожалуйста, подтвердите свою почту — мы отправили вам письмо с ссылкой";
 
             return response;
         }
 
-        response = await _usersRepository.CreateUserAsync(UserMapper.ToModel(new UserDto
+        response.IsSuccess = await _usersRepository.CreateUserAsync(new User
         {
             Email = request.Login,
             Name = request.UserName,
             PasswordHash = new PasswordHasher<object>().HashPassword(null, request.Password)
-        }));
+        });
 
         return response;
     }

@@ -1,3 +1,4 @@
+using AuthorizationService.Repository;
 using AuthorizationService.Services;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -40,6 +41,7 @@ public static class Extensions
     public static IServiceCollection AddAuthorizationServices(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<IAuthorizationManager, AuthorizationManager>();
+        serviceCollection.AddScoped<IUsersRepository, PostgresUsersRepository>();
         
         return serviceCollection;
     }
