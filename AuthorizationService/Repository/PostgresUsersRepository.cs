@@ -1,7 +1,6 @@
-﻿using AuthorizationService.DataTransferObjects;
-using Infrastructure.AuthorizationService;
+﻿using Infrastructure.AuthorizationService;
 using Infrastructure.AuthorizationService.Models;
-using Shared.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuthorizationService.Repository;
 
@@ -14,13 +13,14 @@ public class PostgresUsersRepository : IUsersRepository
         _context = context;
     }
     
-    public async Task<UserDto?> GetUserAsync(string login)
+    public async Task<User?> GetUserAsync(string login)
     {
-        throw new NotImplementedException();
+        return await _context.Users.FirstOrDefaultAsync(w => w.Email.ToLower() == login.ToLower());
     }
 
-    public async Task<OperationResult> CreateUserAsync(User model)
+    public async Task<bool> CreateUserAsync(User model)
     {
-        throw new NotImplementedException();
+        _context.Users.Add(model);
+        return await _context.SaveChangesAsync() > 0;
     }
 }

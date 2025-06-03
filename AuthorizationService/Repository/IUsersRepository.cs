@@ -1,11 +1,9 @@
-﻿using AuthorizationService.DataTransferObjects;
-using Infrastructure.AuthorizationService.Models;
-using Shared.Models;
+﻿using Infrastructure.AuthorizationService.Models;
 
 namespace AuthorizationService.Repository;
 
 public interface IUsersRepository
 {
-    public Task<UserDto?> GetUserAsync(string login);
-    public Task<OperationResult> CreateUserAsync(User model);
+    public Task<User?> GetUserAsync(string login);
+    public Task<bool> CreateUserAsync(User model);
 }
