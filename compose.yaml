@@ -23,19 +23,6 @@
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       
-  db:
-    image: postgres:15
-    container_name: my_postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: eDice
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./pgdata:/var/lib/postgresql/data
-
   gateway:
     build:
       context: ./ApiGateway
@@ -50,6 +37,8 @@
     build:
       context: ./Authorization.API
       dockerfile: Dockerfile
+    env_file:
+      - .env
     container_name: authorization
     depends_on:
       - kafka
@@ -58,3 +47,4 @@
     environment:
       - KAFKA__BOOTSTRAP_SERVERS=kafka:9092
       - ASPNETCORE_URLS=http://+:81
+      - CONNECTION_STRING=${CONNECTION_STRING}
