@@ -19,7 +19,7 @@ public static class AuthorizationApi
         [FromBody] LoginRequest request,
         IAuthorizationManager authorizationManager)
     {
-        if (ModelValidator.TryValidateObject(request, out var messages))
+        if (!ModelValidator.TryValidateObject(request, out var messages))
         {
             return Results.BadRequest(messages);
         }
@@ -34,7 +34,7 @@ public static class AuthorizationApi
         [FromBody] RegisterRequest request,
         IAuthorizationManager authorizationManager)
     {
-        if (ModelValidator.TryValidateObject(request, out var messages))
+        if (!ModelValidator.TryValidateObject(request, out var messages))
         {
             return Results.BadRequest(messages);
         }
