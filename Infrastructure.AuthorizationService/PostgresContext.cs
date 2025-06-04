@@ -43,28 +43,30 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("gen_random_uuid()")
                 .HasColumnName("id");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("now()")
-                .HasColumnName("created_at");
-            entity.Property(e => e.DisabledBefore)
+            entity.Property(e => e.BannedBefore)
                 .HasColumnType("timestamp without time zone")
-                .HasColumnName("disabled_before");
+                .HasColumnName("banned_before");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("created_at");
             entity.Property(e => e.Email)
                 .HasColumnType("character varying")
                 .HasColumnName("email");
             entity.Property(e => e.EmailConfirmed)
                 .HasDefaultValue(false)
                 .HasColumnName("email_confirmed");
-            entity.Property(e => e.FailedLoginCount).HasColumnName("failed_login_count");
             entity.Property(e => e.Name)
                 .HasColumnType("character varying")
                 .HasColumnName("name");
             entity.Property(e => e.PasswordHash)
                 .HasColumnType("character varying")
                 .HasColumnName("password_hash");
-            entity.Property(e => e.PasswordResetCode)
+            entity.Property(e => e.ResetCode)
                 .HasColumnType("character varying")
-                .HasColumnName("password_reset_code");
+                .HasColumnName("reset_code");
+            entity.Property(e => e.CodeRequestedAt)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("code_requested_at");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -2,6 +2,7 @@ using AuthorizationService.Helpers;
 using AuthorizationService.Models;
 using AuthorizationService.Services;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Models;
 
 namespace AuthorizationService;
 
@@ -11,6 +12,12 @@ public static class AuthorizationApi
     {
         builder.MapPost("/login", Login);
         builder.MapPost("/register", Register);
+        
+        builder.MapPost("/restore", RequestRestorePassword);
+        builder.MapPost("/restore/{code}", RestorePassword);
+        
+        builder.MapPost("/confirm", RequestConfirm);
+        builder.MapPost("/confirm/{code}", Confirm);
 
         return builder;
     }
@@ -19,12 +26,15 @@ public static class AuthorizationApi
         [FromBody] LoginRequest request,
         IAuthorizationManager authorizationManager)
     {
+        var response = new OperationResult();
+        
         if (!ModelValidator.TryValidateObject(request, out var messages))
         {
-            return Results.BadRequest(messages);
+            response.Message = messages.FirstOrDefault();
+            return Results.BadRequest(response);
         }
 
-        var response = await authorizationManager.AuthenticateAsync(request);
+        response = await authorizationManager.AuthenticateAsync(request);
         if (response.IsSuccess) return Results.Ok(response);
 
         return Results.Json(response, statusCode: StatusCodes.Status401Unauthorized);
@@ -34,14 +44,86 @@ public static class AuthorizationApi
         [FromBody] RegisterRequest request,
         IAuthorizationManager authorizationManager)
     {
+        var response = new OperationResult();
+        
         if (!ModelValidator.TryValidateObject(request, out var messages))
         {
-            return Results.BadRequest(messages);
+            response.Message = messages.FirstOrDefault();
+            return Results.BadRequest(response);
         }
 
-        var response = await authorizationManager.RegisterAsync(request);
+        response = await authorizationManager.RegisterAsync(request);
         if (response.IsSuccess) return Results.Ok(response);
 
         return Results.Json(response, statusCode: StatusCodes.Status401Unauthorized);
+    }
+    
+    private static async Task<IResult> RequestRestorePassword(
+        [FromBody] RequestRestorePasswordRequest request,
+        IAuthorizationManager authorizationManager)
+    {
+        var response = new OperationResult();
+        
+        if (!ModelValidator.TryValidateObject(request, out var messages))
+        {
+            response.Message = messages.FirstOrDefault();
+            return Results.BadRequest(response);
+        }
+        
+        response = await authorizationManager.CreateRestorePasswordRequestAsync(request);
+        if (response.IsSuccess) return Results.Ok(response);
+
+        return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
+    }
+    
+    private static async Task<IResult> RestorePassword(
+        IAuthorizationManager authorizationManager, 
+        [FromBody] RestorePasswordRequest request,
+        string code)
+    {
+        var response = new OperationResult();
+        if (string.IsNullOrEmpty(code))
+        {
+            response.Message = "Код для восстановления пароля не найден";
+            return Results.BadRequest(response);
+        }
+        
+        request = request with {Code = code};
+        response = await authorizationManager.RestorePasswordAsync(request);
+        if (response.IsSuccess) return Results.Ok(response);
+
+        return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
+    }
+
+    private static async Task<IResult> Confirm(string code, IAuthorizationManager authorizationManager)
+    {
+        var response = new OperationResult();
+        if (string.IsNullOrEmpty(code))
+        {
+            response.Message = "Код для восстановления пароля не найден";
+            return Results.BadRequest(response);
+        }
+
+        response = await authorizationManager.ConfirmPasswordAsync(code);
+        if (response.IsSuccess) return Results.Ok(response);
+        
+        return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
+    }
+    
+    private static async Task<IResult> RequestConfirm(IAuthorizationManager authorizationManager, 
+        [FromBody] RequestEmailConfirmRequest request)
+    {
+        var response = new OperationResult();
+        
+        if (!ModelValidator.TryValidateObject(request, out var messages))
+        {
+            response.Message = messages.FirstOrDefault();
+            return Results.BadRequest(response);
+        }
+        
+        response = await authorizationManager.CreateConfirmPasswordRequestAsync(request.Email);
+        if (response.IsSuccess) return Results.Ok(response);
+        
+        return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
     }
 }
