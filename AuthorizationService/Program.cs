@@ -23,6 +23,7 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 app.UseStatusCodePages();
+app.UseCors(corsPolicyBuilder => corsPolicyBuilder.AllowAnyOrigin());
 
 app.MapDefaultEndpoints();
 app.MapAuthorizationApi();
