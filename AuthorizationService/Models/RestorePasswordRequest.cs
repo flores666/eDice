@@ -3,6 +3,7 @@
 namespace AuthorizationService.Models;
 
 public record RestorePasswordRequest(
-    [Required] 
+    [Required]
+    [Length(8, 35)]
     string Password,
     string? Code = null);
