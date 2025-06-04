@@ -27,7 +27,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Infrastructure.AuthorizationService\Infrastructure.AuthorizationService.csproj" />
       <ProjectReference Include="..\Shared.Lib\Shared.Lib.csproj" />
-      <ProjectReference Include="..\Shared.Logger\Shared.Logger.csproj" />
+      <ProjectReference Include="..\Shared.Logging\Shared.Logging.csproj" />
       <ProjectReference Include="..\Shared.Models\Shared.Models.csproj" />
     </ItemGroup>
 
