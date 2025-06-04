@@ -9,6 +9,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAuthorizationServices();
 builder.AddDefaultHealthChecks();
 builder.Host.UseLogger();
+builder.Services.AddCors();
 
 var app = builder.Build();
 

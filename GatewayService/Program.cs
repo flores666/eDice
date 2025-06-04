@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddOcelot();
 builder.Services.AddOcelot(builder.Configuration);
+builder.Services.AddCors();
 
 var app = builder.Build();
 
