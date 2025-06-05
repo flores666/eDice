@@ -3,7 +3,7 @@
 namespace AuthorizationService.Models;
 
 public class RequestEmailConfirmRequest
-{ 
-    [EmailAddress] 
-    public string Email { get; set; }
+{
+    [EmailAddress(ErrorMessage = "Поле «Email» должно содержать корректный email.")]
+    public string Email { get; set; } = default!;
 }
