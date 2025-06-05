@@ -2,10 +2,14 @@
 
 namespace AuthorizationService.Models;
 
-public record RegisterRequest(
-    [Required]
-    [EmailAddress]
-    [Length(2, 35)]
-    string Login,
-    [Required] [Length(2, 35)] string UserName,
-    [Required] [Length(8, 35)] string Password);
+public class RegisterRequest
+{
+    [Required, EmailAddress, MinLength(2), MaxLength(35)]
+    public string Login { get; set; } = default!;
+
+    [Required, MinLength(2), MaxLength(35)]
+    public string UserName { get; set; } = default!;
+
+    [Required, MinLength(2), MaxLength(35)]
+    public string Password { get; set; } = default!;
+}

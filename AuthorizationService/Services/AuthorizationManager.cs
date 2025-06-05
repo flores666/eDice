@@ -60,13 +60,16 @@ public class AuthorizationManager : IAuthorizationManager
             return response;
         }
 
+        var confirmCode = Guid.NewGuid().ToString().AsSpan(0, 8).ToString();
         response.IsSuccess = await _usersRepository.CreateUserAsync(new User
         {
             Email = request.Login,
             Name = request.UserName,
             PasswordHash = new PasswordHasher<object>().HashPassword(null, request.Password),
             EmailConfirmed = false,
-            CodeRequestedAt = DateTime.UtcNow
+            CodeRequestedAt = DateTime.UtcNow,
+            CreatedAt = DateTime.UtcNow,
+            ResetCode = confirmCode
         });
 
         if (response.IsSuccess)

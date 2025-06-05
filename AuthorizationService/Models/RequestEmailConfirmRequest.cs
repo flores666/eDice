@@ -2,4 +2,8 @@
 
 namespace AuthorizationService.Models;
 
-public record RequestEmailConfirmRequest([EmailAddress] string Email);
+public class RequestEmailConfirmRequest
+{ 
+    [EmailAddress] 
+    public string Email { get; set; }
+}

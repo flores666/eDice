@@ -87,8 +87,8 @@ public static class AuthorizationApi
             response.Message = "Код для восстановления пароля не найден";
             return Results.BadRequest(response);
         }
-        
-        request = request with {Code = code};
+
+        request.Code = code;
         response = await authorizationManager.RestorePasswordAsync(request);
         if (response.IsSuccess) return Results.Ok(response);
 

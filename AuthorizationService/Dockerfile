@@ -9,7 +9,7 @@ WORKDIR /src
 # в контексте уже лежат все файлы проекта (csproj, Program.cs, Controllers и т.д.)
 COPY AuthorizationService/ AuthorizationService/
 COPY Shared.Lib/ Shared.Lib/
-COPY Shared.Logger/ Shared.Logger/
+COPY Shared.Logging/ Shared.Logging/
 COPY Shared.Models/ Shared.Models/
 COPY Infrastructure.AuthorizationService/ Infrastructure.AuthorizationService/
 

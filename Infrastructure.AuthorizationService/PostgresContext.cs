@@ -43,12 +43,9 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("gen_random_uuid()")
                 .HasColumnName("id");
-            entity.Property(e => e.BannedBefore)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("banned_before");
-            entity.Property(e => e.CreatedAt)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("created_at");
+            entity.Property(e => e.BannedBefore).HasColumnName("banned_before");
+            entity.Property(e => e.CodeRequestedAt).HasColumnName("code_requested_at");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.Property(e => e.Email)
                 .HasColumnType("character varying")
                 .HasColumnName("email");
@@ -64,9 +61,6 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.ResetCode)
                 .HasColumnType("character varying")
                 .HasColumnName("reset_code");
-            entity.Property(e => e.CodeRequestedAt)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("code_requested_at");
         });
 
         OnModelCreatingPartial(modelBuilder);

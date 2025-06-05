@@ -2,8 +2,10 @@
 
 namespace AuthorizationService.Models;
 
-public record RequestRestorePasswordRequest(
+public class RequestRestorePasswordRequest
+{
     [Required]
     [EmailAddress]
     [Length(2, 35)]
-    string Login);
+    public string Login { get; set; }
+}

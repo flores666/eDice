@@ -1,19 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AuthorizationService.Helpers;
 
 public static class ModelValidator
 {
-    public static bool TryValidateObject(object model, out List<string?> errorMessages)
+    public static bool TryValidateObject([NotNullWhen(true)] object model, out List<string> errorMessages)
     {
-        var validationResults = new List<ValidationResult>();
+        var results = new List<ValidationResult>();
+        var context = new ValidationContext(model);
 
-        if (!Validator.TryValidateObject(model, new ValidationContext(model), validationResults, true))
-        {
-            errorMessages = validationResults.Select(s => s.ErrorMessage).ToList();
-        }
-        else errorMessages = new List<string?>();
-
-        return true;
+        var isValid = Validator.TryValidateObject(model, context, results, true);
+        errorMessages = !isValid ? results.Select(s => s.ErrorMessage!).ToList() : new List<string>();
+        
+        return isValid;
     }
 }

@@ -2,8 +2,9 @@
 
 namespace AuthorizationService.Models;
 
-public record RestorePasswordRequest(
-    [Required]
-    [Length(8, 35)]
-    string Password,
-    string? Code = null);
+public class RestorePasswordRequest
+{
+    [Required] [Length(8, 35)] 
+    public string Password { get; set; }
+    public string? Code { get; set; } = null;
+}
