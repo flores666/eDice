@@ -26,4 +26,25 @@ public static class LoggerExtensions
                 services.AddSingleton(typeof(IAppLogger<>), typeof(AppLogger<>));
             });
     } 
+    
+    public static IHostBuilder UseLoggerMinimalApi(this IHostBuilder hostBuilder)
+    {
+        return hostBuilder
+            .ConfigureServices((context, services) =>
+            {
+                var configuration = context.Configuration;
+
+                // Настраиваем стандартный провайдер логирования:
+                services.AddLogging(service =>
+                {
+                    service.ClearProviders();
+                    service.AddConfiguration(configuration.GetSection("Logging"));
+                    service.AddConsole();
+                    service.AddDebug();
+                });
+
+                // Регистрируем нашу обёртку:
+                services.AddTransient(typeof(IAppLogger<>), typeof(AppLogger<>));
+            });
+    } 
 }
