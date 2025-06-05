@@ -13,7 +13,11 @@ public class PostgresUsersRepository : IUsersRepository
         _context = context;
     }
 
-    public async Task<User?> GetUserByLoginAsync(string login) => await _context.Users.FirstOrDefaultAsync(w => w.Email.ToLower() == login.ToLower());
+    public async Task<User?> GetUserByLoginAsync(string login)
+    {
+        if (string.IsNullOrEmpty(login)) return null;
+        return await _context.Users.FirstOrDefaultAsync(w => w.Email.ToLower() == login.ToLower());
+    }
 
     public async Task<bool> CreateUserAsync(User model)
     {

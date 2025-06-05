@@ -15,7 +15,7 @@ public class AuthorizationManager : IAuthorizationManager
     private readonly IUsersRepository _usersRepository;
     private readonly HttpContext _httpContext;
 
-    public AuthorizationManager(IUsersRepository usersRepository, HttpContextAccessor httpContextAccessor)
+    public AuthorizationManager(IUsersRepository usersRepository, IHttpContextAccessor httpContextAccessor)
     {
         _usersRepository = usersRepository;
         _httpContext = httpContextAccessor.HttpContext ?? new DefaultHttpContext();
