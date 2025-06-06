@@ -8,10 +8,11 @@ WORKDIR /src
 
 # в контексте уже лежат все файлы проекта (csproj, Program.cs, Controllers и т.д.)
 COPY AuthorizationService/ AuthorizationService/
+COPY Infrastructure.AuthorizationService/ Infrastructure.AuthorizationService/
 COPY Shared.Lib/ Shared.Lib/
 COPY Shared.Logging/ Shared.Logging/
 COPY Shared.Models/ Shared.Models/
-COPY Infrastructure.AuthorizationService/ Infrastructure.AuthorizationService/
+COPY Shared.MessageBus.Kafka/ Shared.MessageBus.Kafka/
 
 RUN dotnet restore "AuthorizationService/AuthorizationService.csproj"
 RUN dotnet build   "AuthorizationService/AuthorizationService.csproj" -c $BUILD_CONFIGURATION -o /app/build
