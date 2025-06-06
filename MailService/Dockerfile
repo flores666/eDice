@@ -1,20 +1,22 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
 WORKDIR /app
 EXPOSE 83
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["MailService/MailService.csproj", "MailService/"]
+
+# в контексте уже лежат все файлы проекта (csproj, Program.cs, Controllers и т.д.)
+COPY MailService/ MailService/
+COPY Shared.Logging/ Shared.Logging/
+COPY Shared.Models/ Shared.Models/
+
 RUN dotnet restore "MailService/MailService.csproj"
-COPY . .
-WORKDIR "/src/MailService"
-RUN dotnet build "MailService.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build   "MailService/MailService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "MailService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "MailService/MailService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN ls -la /app/publish
 
 FROM base AS final
 WORKDIR /app

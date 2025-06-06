@@ -25,8 +25,8 @@
       
   mail:
     build:
-      context: ./MailService
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: MailService/Dockerfile
     env_file:
       - ./MailService/.env
     container_name: mail
