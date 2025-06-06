@@ -43,7 +43,6 @@ public class SmtpService : ISmtpService
         }
         catch
         {
-            // В случае ошибки можно залогировать или бросить исключение дальше
             throw;
         }
         finally
