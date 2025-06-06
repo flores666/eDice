@@ -1,6 +1,8 @@
+using DotNetEnv;
 using MailService;
 using Shared.Logging;
 
+Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

@@ -23,6 +23,18 @@
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       
+  mail:
+    build:
+      context: ./MailService
+      dockerfile: Dockerfile
+    env_file:
+      - ./MailService/.env
+    container_name: mail
+    ports:
+      - "5003:83"
+    environment:
+      - ASPNETCORE_URLS=http://+:83
+  
   gateway:
     build:
       context: ./GatewayService

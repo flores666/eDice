@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="DotNetEnv" Version="3.1.1" />
         <PackageReference Include="MailKit" Version="4.12.1" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
     </ItemGroup>
@@ -20,6 +21,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Shared.Logging\Shared.Logging.csproj" />
+      <ProjectReference Include="..\Shared.Models\Shared.Models.csproj" />
     </ItemGroup>
 
 </Project>
