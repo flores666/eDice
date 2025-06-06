@@ -31,7 +31,7 @@
       - ./MailService/.env
     container_name: mail
     ports:
-      - "5002:83"
+      - "5003:83"
     environment:
       - ASPNETCORE_URLS=http://+:83
   
