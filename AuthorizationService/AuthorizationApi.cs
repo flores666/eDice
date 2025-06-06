@@ -104,7 +104,7 @@ public static class AuthorizationApi
             return Results.BadRequest(response);
         }
 
-        response = await authorizationManager.ConfirmPasswordAsync(code);
+        response = await authorizationManager.ConfirmEmailAsync(code);
         if (response.IsSuccess) return Results.Ok(response);
         
         return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
@@ -121,7 +121,7 @@ public static class AuthorizationApi
             return Results.BadRequest(response);
         }
         
-        response = await authorizationManager.CreateConfirmPasswordRequestAsync(request.Email);
+        response = await authorizationManager.CreateConfirmEmailRequestAsync(request);
         if (response.IsSuccess) return Results.Ok(response);
         
         return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);

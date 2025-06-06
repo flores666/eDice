@@ -6,4 +6,7 @@ public class RequestEmailConfirmRequest
 {
     [EmailAddress(ErrorMessage = "Поле «Email» должно содержать корректный email.")]
     public string Email { get; set; } = default!;
+
+    [Required]
+    public string ReturnUrl { get; set; }
 }

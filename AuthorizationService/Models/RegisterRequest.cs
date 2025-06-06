@@ -16,4 +16,7 @@ public class RegisterRequest
     [Required(ErrorMessage = "Поле «Пароль» обязательно для заполнения.")]
     [Length(2, 35, ErrorMessage = "Поле «Пароль» должно содержать от {1} до {2} символов.")]
     public string Password { get; set; } = default!;
+    
+    [Required]
+    public string ReturnUrl { get; set; }
 }

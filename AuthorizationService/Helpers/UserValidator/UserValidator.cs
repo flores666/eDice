@@ -45,7 +45,7 @@ public static class UserValidator
         var isValid = IsValid(user, out errorMessage);
         if (isValid)
         {
-            if (user.CodeRequestedAt != null && DateTime.UtcNow > user.CodeRequestedAt.Value.Add(Constants.RestoreCodeTimeAlive))
+            if (user.CodeRequestedAt != null && DateTime.UtcNow > user.CodeRequestedAt.Value.Add(Constants.RestoreCodeDelay))
             {
                 errorMessage = "К сожалению, срок действия кода истёк. Пожалуйста, отправьте запрос ещё раз, чтобы получить новый код";
                 return false;

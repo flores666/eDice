@@ -8,4 +8,7 @@ public class RequestRestorePasswordRequest
     [EmailAddress(ErrorMessage = "Поле «Логин» должно содержать корректный email.")]
     [Length(2, 35, ErrorMessage = "Поле «Логин» должно содержать от {1} до {2} символов.")]
     public string Login { get; set; } = default!;
+
+    [Required]
+    public string ReturnUrl { get; set; }
 }

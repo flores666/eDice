@@ -9,6 +9,6 @@ public interface IAuthorizationManager
     public Task<OperationResult> RegisterAsync(RegisterRequest request);
     public Task<OperationResult> CreateRestorePasswordRequestAsync(RequestRestorePasswordRequest request);
     public Task<OperationResult> RestorePasswordAsync(RestorePasswordRequest request);
-    public Task<OperationResult> ConfirmPasswordAsync(string code);
-    public Task<OperationResult> CreateConfirmPasswordRequestAsync(string email);
+    public Task<OperationResult> ConfirmEmailAsync(string code);
+    public Task<OperationResult> CreateConfirmEmailRequestAsync(RequestEmailConfirmRequest request);
 }

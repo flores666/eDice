@@ -1,13 +1,16 @@
 using AuthorizationService;
 using Shared.Lib.Extensions;
 using Shared.Logging;
+using Shared.MessageBus.Kafka;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthorizationServices();
+builder.Services.AddKafka();
 builder.AddDefaultHealthChecks();
 builder.Host.UseLogger();
 
