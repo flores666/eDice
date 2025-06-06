@@ -111,13 +111,10 @@ public class AuthorizationManager : IAuthorizationManager
         user.ResetCode = Guid.NewGuid().ToString().AsSpan(0, 8).ToString();
         user.CodeRequestedAt = DateTime.UtcNow;
 
-        var isUpdated = await _usersRepository.UpdateUserAsync(user);
-        if (isUpdated)
+        response.IsSuccess = await _usersRepository.UpdateUserAsync(user);
+        if (response.IsSuccess)
         {
-            var restoreLink = _httpContext.Request.Host.ToUriComponent().TrimEnd('/') + "/auth/restore/" + user.ResetCode;
             await _messageProducer.PublishAsync(KafkaTopics.Mail, GetRestorePasswordEmailModel(user.Email, user.ResetCode, request.ReturnUrl));
-            response.IsSuccess = true;
-            response.Message = $"Пока сообщения не работают, вот вам ссылка на восстановление {restoreLink}";
         }
 
         return response;
