@@ -10,7 +10,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthorizationServices();
-builder.Services.AddKafka();
+builder.Services.AddKafkaProducer();
 builder.AddDefaultHealthChecks();
 builder.Host.UseLogger();
 

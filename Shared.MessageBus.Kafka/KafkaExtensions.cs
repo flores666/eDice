@@ -5,7 +5,7 @@ namespace Shared.MessageBus.Kafka;
 
 public static class KafkaExtensions
 {
-    public static IServiceCollection AddKafka(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddKafkaProducer(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddSingleton(typeof(IMessagesProducer<>), typeof(KafkaMessagesProducer<>));
         return serviceCollection;
