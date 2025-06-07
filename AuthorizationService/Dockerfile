@@ -19,7 +19,9 @@ RUN dotnet build   "AuthorizationService/AuthorizationService.csproj" -c $BUILD_
 
 FROM build AS publish
 RUN dotnet publish "AuthorizationService/AuthorizationService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-RUN ls -la /app/publish
+
+# Установить libkrb5
+RUN apt-get update && apt-get install -y libkrb5-3 && rm -rf /var/lib/apt/lists/*
 
 FROM base AS final
 WORKDIR /app

@@ -77,7 +77,7 @@ public class AuthorizationManager : IAuthorizationManager
 
         if (response.IsSuccess)
         {
-            await _messagesProducer.PublishAsync(KafkaTopics.Mail, GetConfirmEmailModel(request.Login, confirmCode, request.ReturnUrl));
+            await _messagesProducer.PublishAsync(KafkaTopics.UserCreated, GetConfirmEmailModel(request.Login, confirmCode, request.ReturnUrl));
         }
 
         return response;
@@ -111,7 +111,7 @@ public class AuthorizationManager : IAuthorizationManager
         response.IsSuccess = await _usersRepository.UpdateUserAsync(user);
         if (response.IsSuccess)
         {
-            await _messagesProducer.PublishAsync(KafkaTopics.Mail, GetRestorePasswordEmailModel(user.Email, user.ResetCode, request.ReturnUrl));
+            await _messagesProducer.PublishAsync(KafkaTopics.PasswordResetRequested, GetRestorePasswordEmailModel(user.Email, user.ResetCode, request.ReturnUrl));
         }
 
         return response;
@@ -190,7 +190,7 @@ public class AuthorizationManager : IAuthorizationManager
         response.IsSuccess = await _usersRepository.UpdateUserAsync(user);
         if (response.IsSuccess)
         {
-            await _messagesProducer.PublishAsync(KafkaTopics.Mail, GetConfirmEmailModel(request.Email, user.ResetCode, request.ReturnUrl));
+            await _messagesProducer.PublishAsync(KafkaTopics.EmailConfirmRequested, GetConfirmEmailModel(request.Email, user.ResetCode, request.ReturnUrl));
         }
 
         return response;
