@@ -7,7 +7,7 @@ namespace Shared.MessageBus.Kafka.Producer;
 public class KafkaMessagesProducer<TMessage> : IMessagesProducer<TMessage>
 {
     private readonly IAppLogger<KafkaMessagesProducer<TMessage>> _logger;
-    private readonly IProducer<Guid, TMessage> _producer;
+    private readonly IProducer<string, TMessage> _producer;
 
     public KafkaMessagesProducer(IAppLogger<KafkaMessagesProducer<TMessage>> logger)
     {
@@ -17,21 +17,20 @@ public class KafkaMessagesProducer<TMessage> : IMessagesProducer<TMessage>
             BootstrapServers = KafkaOptions.BootstrapServers
         };
 
-        _producer = new ProducerBuilder<Guid, TMessage>(config)
+        _producer = new ProducerBuilder<string, TMessage>(config)
             .SetValueSerializer(new KafkaValueSerializer<TMessage>())
-            .SetKeySerializer(new KafkaKeySerializer())
             .Build();
         
         _logger.LogInformation("Ready!");
     }
     
-    public async Task<Guid> PublishAsync(string topic, TMessage message, CancellationToken cancellationToken = default)
+    public async Task<string> PublishAsync(string topic, TMessage message, CancellationToken cancellationToken = default)
     {
-        var key = Guid.NewGuid();
+        var key = Guid.NewGuid().ToString();
         
         if (_logger.IsDebugEnabled) _logger.LogDebug("Published message with key {K}", key);
         
-        await _producer.ProduceAsync(topic, new Message<Guid, TMessage>
+        await _producer.ProduceAsync(topic, new Message<string, TMessage>
         {
             Key = key,
             Value = message,

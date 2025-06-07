@@ -14,8 +14,8 @@ public class KafkaMessagesConsumer<TMessage> : BackgroundService
     private readonly string _topic;
     private readonly IConsumer<string, TMessage> _consumer;
 
-    public KafkaMessagesConsumer(IOptions<KafkaConsumerOptions> consumerOptions, 
-        IAppLogger<KafkaMessagesConsumer<TMessage>> logger, IMessagesHandler<TMessage> handler)
+    public KafkaMessagesConsumer(IOptions<KafkaConsumerOptions> consumerOptions, IMessagesHandler<TMessage> handler,
+        IAppLogger<KafkaMessagesConsumer<TMessage>> logger, IAppLogger<KafkaValueDeserializer<TMessage>> deserializerLogger)
     {
         _logger = logger;
         _handler = handler;
@@ -29,10 +29,10 @@ public class KafkaMessagesConsumer<TMessage> : BackgroundService
         _topic = consumerOptions.Value.Topic;
 
         _consumer = new ConsumerBuilder<string, TMessage>(config)
-            .SetValueDeserializer(new KafkaValueDeserializer<TMessage>())
+            .SetValueDeserializer(new KafkaValueDeserializer<TMessage>(deserializerLogger))
             .Build();
         
-        _logger.LogInformation("Ready!");
+        _logger.LogInformation("Consumer initialized with group: {G} and topic: {T}", consumerOptions.Value.GroupId, consumerOptions.Value.Topic);
     }
     
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -44,13 +44,14 @@ public class KafkaMessagesConsumer<TMessage> : BackgroundService
     private async Task ConsumeAsync(CancellationToken stoppingToken)
     {
         _consumer.Subscribe(_topic);
+        _logger.LogInformation("Subscribed to topic: {T}", _topic);
 
         try
         {
             while (!stoppingToken.IsCancellationRequested)
             {
                 var result = _consumer.Consume(stoppingToken);
-                if (_logger.IsInformationEnabled) _logger.LogDebug("Consumed message with key {M}", result.Message.Key);
+                if (_logger.IsDebugEnabled) _logger.LogDebug("Consumed message with key {M}", result.Message.Key);
                 await _handler.HandleAsync(result.Message.Value, stoppingToken);
             }
         }
@@ -58,5 +59,12 @@ public class KafkaMessagesConsumer<TMessage> : BackgroundService
         {
             _logger.LogWarning(e.ToString());
         }
+    }
+
+    public override Task StopAsync(CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Stopping background task");
+        _consumer.Close();
+        return base.StopAsync(cancellationToken);
     }
 }
