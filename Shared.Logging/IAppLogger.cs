@@ -6,6 +6,8 @@ namespace Shared.Logging;
 /// <typeparam name="T"></typeparam>
 public interface IAppLogger<T> 
 {
+    bool IsInformationEnabled { get; }
+    bool IsDebugEnabled { get; }
     void LogTrace(string message, params object[] args);
     void LogDebug(string message, params object[] args);
     void LogInformation(string message, params object[] args);

@@ -4,6 +4,8 @@ namespace Shared.Logging;
 
 public class AppLogger<T>(ILogger<T> logger) : IAppLogger<T>
 {
+    public bool IsInformationEnabled => logger.IsEnabled(LogLevel.Information);
+    public bool IsDebugEnabled => logger.IsEnabled(LogLevel.Debug);
     public void LogTrace(string message, params object[] args) => logger.LogTrace(message, args);
 
     public void LogDebug(string message, params object[] args) => logger.LogDebug(message, args);
