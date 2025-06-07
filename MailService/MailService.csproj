@@ -21,6 +21,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Shared.Logging\Shared.Logging.csproj" />
+      <ProjectReference Include="..\Shared.MessageBus.Kafka\Shared.MessageBus.Kafka.csproj" />
       <ProjectReference Include="..\Shared.Models\Shared.Models.csproj" />
     </ItemGroup>
 
