@@ -7,7 +7,7 @@ public static class KafkaExtensions
 {
     public static IServiceCollection AddKafka(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddSingleton(typeof(IMessageProducer<>), typeof(KafkaMessageProducer<>));
+        serviceCollection.AddSingleton(typeof(IMessagesProducer<>), typeof(KafkaMessagesProducer<>));
         return serviceCollection;
     }
 }

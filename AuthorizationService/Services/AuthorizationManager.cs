@@ -14,14 +14,14 @@ namespace AuthorizationService.Services;
 public class AuthorizationManager : IAuthorizationManager
 {
     private readonly IUsersRepository _usersRepository;
-    private readonly IMessageProducer<EmailMessageEvent> _messageProducer;
+    private readonly IMessagesProducer<EmailMessageEvent> _messagesProducer;
     private readonly HttpContext _httpContext;
 
     public AuthorizationManager(IUsersRepository usersRepository, IHttpContextAccessor httpContextAccessor,
-        IMessageProducer<EmailMessageEvent> messageProducer)
+        IMessagesProducer<EmailMessageEvent> messagesProducer)
     {
         _usersRepository = usersRepository;
-        _messageProducer = messageProducer;
+        _messagesProducer = messagesProducer;
         _httpContext = httpContextAccessor.HttpContext ?? new DefaultHttpContext();
     }
 
@@ -80,7 +80,7 @@ public class AuthorizationManager : IAuthorizationManager
 
         if (response.IsSuccess)
         {
-            await _messageProducer.PublishAsync(KafkaTopics.Mail, GetConfirmEmailModel(request.Login, confirmCode, request.ReturnUrl));
+            await _messagesProducer.PublishAsync(KafkaTopics.Mail, GetConfirmEmailModel(request.Login, confirmCode, request.ReturnUrl));
         }
 
         return response;
@@ -114,7 +114,7 @@ public class AuthorizationManager : IAuthorizationManager
         response.IsSuccess = await _usersRepository.UpdateUserAsync(user);
         if (response.IsSuccess)
         {
-            await _messageProducer.PublishAsync(KafkaTopics.Mail, GetRestorePasswordEmailModel(user.Email, user.ResetCode, request.ReturnUrl));
+            await _messagesProducer.PublishAsync(KafkaTopics.Mail, GetRestorePasswordEmailModel(user.Email, user.ResetCode, request.ReturnUrl));
         }
 
         return response;
@@ -193,7 +193,7 @@ public class AuthorizationManager : IAuthorizationManager
         response.IsSuccess = await _usersRepository.UpdateUserAsync(user);
         if (response.IsSuccess)
         {
-            await _messageProducer.PublishAsync(KafkaTopics.Mail, GetConfirmEmailModel(request.Email, user.ResetCode, request.ReturnUrl));
+            await _messagesProducer.PublishAsync(KafkaTopics.Mail, GetConfirmEmailModel(request.Email, user.ResetCode, request.ReturnUrl));
         }
 
         return response;

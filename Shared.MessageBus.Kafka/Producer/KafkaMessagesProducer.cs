@@ -3,11 +3,11 @@ using Shared.MessageBus.Kafka.Serializer;
 
 namespace Shared.MessageBus.Kafka.Producer;
 
-public class KafkaMessageProducer<TMessage> : IMessageProducer<TMessage>
+public class KafkaMessagesProducer<TMessage> : IMessagesProducer<TMessage>
 {
     private readonly IProducer<Guid, TMessage> _producer;
 
-    public KafkaMessageProducer()
+    public KafkaMessagesProducer()
     {
         var config = new ProducerConfig
         {
