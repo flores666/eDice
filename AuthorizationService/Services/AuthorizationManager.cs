@@ -15,14 +15,11 @@ public class AuthorizationManager : IAuthorizationManager
 {
     private readonly IUsersRepository _usersRepository;
     private readonly IMessagesProducer<EmailMessageEvent> _messagesProducer;
-    private readonly HttpContext _httpContext;
 
-    public AuthorizationManager(IUsersRepository usersRepository, IHttpContextAccessor httpContextAccessor,
-        IMessagesProducer<EmailMessageEvent> messagesProducer)
+    public AuthorizationManager(IUsersRepository usersRepository, IMessagesProducer<EmailMessageEvent> messagesProducer)
     {
         _usersRepository = usersRepository;
         _messagesProducer = messagesProducer;
-        _httpContext = httpContextAccessor.HttpContext ?? new DefaultHttpContext();
     }
 
     public async Task<OperationResult> AuthenticateAsync(LoginRequest request)
