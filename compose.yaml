@@ -13,6 +13,11 @@
     container_name: kafka
     depends_on:
       - zookeeper
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "9092" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     ports:
       - "9092:9092"
     environment:
@@ -23,19 +28,8 @@
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      
-  mail:
-    build:
-      context: .
-      dockerfile: MailService/Dockerfile
-    env_file:
-      - ./MailService/.env
-    container_name: mail
-    ports:
-      - "5003:83"
-    environment:
-      - ASPNETCORE_URLS=http://+:83
-  
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+    
   gateway:
     build:
       context: ./GatewayService
@@ -54,9 +48,26 @@
       - ./AuthorizationService/.env
     container_name: authorization
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
     ports:
       - "5001:81"
     environment:
       - KAFKA__BOOTSTRAP_SERVERS=kafka:9092
       - ASPNETCORE_URLS=http://+:81
+  
+  mail:
+    build:
+      context: .
+      dockerfile: MailService/Dockerfile
+    env_file:
+      - ./MailService/.env
+    container_name: mail
+    depends_on:
+      kafka:
+        condition: service_healthy
+    ports:
+      - "5003:83"
+    environment:
+      - KAFKA__BOOTSTRAP_SERVERS=kafka:9092
+      - ASPNETCORE_URLS=http://+:83
