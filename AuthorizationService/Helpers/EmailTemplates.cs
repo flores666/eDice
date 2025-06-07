@@ -27,7 +27,7 @@ public static class EmailTemplates
       display: inline-block;
       padding: 14px 24px;
       background-color: #18181b;
-      color: #ffffff;
+      color: #ffffff !important;
       text-decoration: none;
       border-radius: 6px;
       font-weight: bold;
@@ -85,7 +85,7 @@ public static class EmailTemplates
       display: inline-block;
       padding: 14px 24px;
       background-color: #18181b;
-      color: #ffffff;
+      color: #ffffff !important;
       text-decoration: none;
       border-radius: 6px;
       font-weight: bold;
