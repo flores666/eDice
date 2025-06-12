@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace AuthorizationService.Models;
 
@@ -12,4 +13,7 @@ public class LoginRequest
     [Required(ErrorMessage = "Поле «Пароль» обязательно для заполнения.")]
     [Length(8, 35, ErrorMessage = "Поле «Пароль» должно содержать от {1} до {2} символов.")]
     public string Password { get; set; } = default!;
+
+    [ValidateNever]
+    public string? UserIp { get; set; }
 }

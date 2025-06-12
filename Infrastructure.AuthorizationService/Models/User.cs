@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Infrastructure.AuthorizationService.Models;
+﻿namespace Infrastructure.AuthorizationService.Models;
 
 public partial class User
 {
@@ -22,4 +19,6 @@ public partial class User
     public DateTime? CodeRequestedAt { get; set; }
 
     public DateTime? BannedBefore { get; set; }
+
+    public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }

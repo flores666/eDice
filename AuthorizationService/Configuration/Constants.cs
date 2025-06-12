@@ -4,4 +4,6 @@ public static class Constants
 {
     public static TimeSpan ConfirmEmailDelay = TimeSpan.FromMinutes(15);
     public static TimeSpan RestoreCodeDelay = TimeSpan.FromMinutes(15);
+    public static TimeSpan RefreshTokenLifeTime = TimeSpan.FromDays(7);
+    public static TimeSpan AccessTokenLifeTime = TimeSpan.FromMinutes(10);
 }

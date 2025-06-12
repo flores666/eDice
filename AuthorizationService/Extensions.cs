@@ -45,6 +45,7 @@ public static class Extensions
         serviceCollection.AddDbContext<PostgresContext>(options => options.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING")));
         serviceCollection.AddScoped<IAuthorizationManager, AuthorizationManager>();
         serviceCollection.AddScoped<IUsersRepository, PostgresUsersRepository>();
+        serviceCollection.AddScoped<ITokensRepository, PostgresTokensRepository>();
         
         return serviceCollection;
     }

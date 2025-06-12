@@ -2,6 +2,7 @@ using AuthorizationService.Helpers;
 using AuthorizationService.Models;
 using AuthorizationService.Services;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Lib.Extensions;
 using Shared.Models;
 
 namespace AuthorizationService;
@@ -19,12 +20,16 @@ public static class AuthorizationApi
         builder.MapPost("/confirm", RequestConfirm);
         builder.MapPost("/confirm/{code}", Confirm);
 
+        builder.MapPost("/refresh", Refresh);
+        builder.MapPost("/logout", Logout);
+        
         return builder;
     }
 
     private static async Task<IResult> Login(
         [FromBody] LoginRequest request,
-        IAuthorizationManager authorizationManager)
+        IAuthorizationManager authorizationManager,
+        HttpContext httpContext)
     {
         var response = new OperationResult();
         
@@ -34,6 +39,7 @@ public static class AuthorizationApi
             return Results.BadRequest(response);
         }
 
+        request.UserIp = httpContext.GetUserIp();
         response = await authorizationManager.AuthenticateAsync(request);
         if (response.IsSuccess) return Results.Ok(response);
 
@@ -110,8 +116,7 @@ public static class AuthorizationApi
         return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
     }
     
-    private static async Task<IResult> RequestConfirm(IAuthorizationManager authorizationManager, 
-        [FromBody] RequestEmailConfirmRequest request)
+    private static async Task<IResult> RequestConfirm(IAuthorizationManager authorizationManager, [FromBody] RequestEmailConfirmRequest request)
     {
         var response = new OperationResult();
         
@@ -122,6 +127,38 @@ public static class AuthorizationApi
         }
         
         response = await authorizationManager.CreateConfirmEmailRequestAsync(request);
+        if (response.IsSuccess) return Results.Ok(response);
+        
+        return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
+    }
+    
+    private static async Task<IResult> Logout(IAuthorizationManager authorizationManager, [FromBody] RefreshTokenRequest request)
+    {
+        var response = new OperationResult();
+        
+        if (!ModelValidator.TryValidateObject(request, out var messages))
+        {
+            response.Message = messages.FirstOrDefault();
+            return Results.BadRequest(response);
+        }
+        
+        response = await authorizationManager.LogoutAsync(request);
+        if (response.IsSuccess) return Results.Ok(response);
+        
+        return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
+    }
+
+    private static async Task<IResult> Refresh(IAuthorizationManager authorizationManager, [FromBody] RefreshTokenRequest request)
+    {
+        var response = new OperationResult();
+        
+        if (!ModelValidator.TryValidateObject(request, out var messages))
+        {
+            response.Message = messages.FirstOrDefault();
+            return Results.BadRequest(response);
+        }
+        
+        response = await authorizationManager.RefreshTokenAsync(request);
         if (response.IsSuccess) return Results.Ok(response);
         
         return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);

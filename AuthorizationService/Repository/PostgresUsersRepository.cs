@@ -19,6 +19,11 @@ public class PostgresUsersRepository : IUsersRepository
         return await _context.Users.FirstOrDefaultAsync(w => w.Email.ToLower() == login.ToLower());
     }
 
+    public async Task<User?> GetUserByIdAsync(Guid userId)
+    {
+        return await _context.Users.FindAsync(userId);
+    }
+
     public async Task<bool> CreateUserAsync(User model)
     {
         _context.Users.Add(model);

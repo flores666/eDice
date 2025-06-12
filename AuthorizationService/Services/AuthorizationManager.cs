@@ -2,6 +2,7 @@
 using AuthorizationService.Helpers;
 using AuthorizationService.Helpers.UserValidator;
 using AuthorizationService.Models;
+using AuthorizationService.Models.Tokens;
 using AuthorizationService.Repository;
 using Infrastructure.AuthorizationService.Models;
 using Microsoft.AspNetCore.Identity;
@@ -14,11 +15,14 @@ namespace AuthorizationService.Services;
 public class AuthorizationManager : IAuthorizationManager
 {
     private readonly IUsersRepository _usersRepository;
+    private readonly ITokensRepository _tokensRepository;
     private readonly IMessagesProducer<EmailMessageEvent> _messagesProducer;
 
-    public AuthorizationManager(IUsersRepository usersRepository, IMessagesProducer<EmailMessageEvent> messagesProducer)
+    public AuthorizationManager(IUsersRepository usersRepository, ITokensRepository tokensRepository,
+        IMessagesProducer<EmailMessageEvent> messagesProducer)
     {
         _usersRepository = usersRepository;
+        _tokensRepository = tokensRepository;
         _messagesProducer = messagesProducer;
     }
 
@@ -27,9 +31,7 @@ public class AuthorizationManager : IAuthorizationManager
         var response = new OperationResult();
 
         var user = await _usersRepository.GetUserByLoginAsync(request.Login);
-        if (user == null ||
-            new PasswordHasher<object>().VerifyHashedPassword(null, user.PasswordHash, request.Password) ==
-            PasswordVerificationResult.Failed)
+        if (user == null || new PasswordHasher<object>().VerifyHashedPassword(null, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
         {
             response.Message = "Похоже, что пользователь с такими данными не существует";
             return response;
@@ -43,12 +45,21 @@ public class AuthorizationManager : IAuthorizationManager
             return response;
         }
 
-        response.IsSuccess = true;
-        response.Data = JwtTokenGenerator.GenerateJwtToken(user);
+        var token = TokenGenerator.CreateTokens(user, request.UserIp);
+        
+        response.IsSuccess = await _tokensRepository.CreateTokenAsync(token.RefreshToken);
+        if (response.IsSuccess)
+        {
+            response.Data = new TokenResultModel
+            {
+                RefreshToken = token.RefreshToken.Token,
+                AccessToken = token.AccessToken
+            };
+        }
 
         return response;
     }
-
+    
     public async Task<OperationResult> RegisterAsync(RegisterRequest request)
     {
         var response = new OperationResult();
@@ -194,6 +205,75 @@ public class AuthorizationManager : IAuthorizationManager
         }
 
         return response;
+    }
+    
+    public async Task<OperationResult> RefreshTokenAsync(RefreshTokenRequest request)
+    {
+        var response = new OperationResult();
+
+        var refreshToken = await _tokensRepository.GetByRefreshTokenAsync(request.RefreshToken);
+        if (refreshToken == null || !refreshToken.IsActive)
+        {
+            response.Message = "Недействительный токен обновления";
+            return response;
+        }
+
+        var user = await _usersRepository.GetUserByIdAsync(refreshToken.UserId);
+        if (user == null)
+        {
+            response.Message = "Пользователь не найден";
+            return response;
+        }
+
+        var newRefreshToken = TokenGenerator.GenerateRefreshToken(user.Id, request.Ip);
+        refreshToken.RevokedAt = DateTime.UtcNow;
+        refreshToken.RevokedByIp = request.Ip;
+        refreshToken.ReplacedByToken = newRefreshToken.Id;
+
+        response.IsSuccess = await SaveRefreshTokensAsync(refreshToken, newRefreshToken);
+        if (response.IsSuccess) response.Data = TokenGenerator.CreateTokens(user, request.Ip);
+
+        return response;
+    }
+
+    public async Task<OperationResult> LogoutAsync(RefreshTokenRequest request)
+    {
+        var response = new OperationResult();
+
+        var refreshToken = await _tokensRepository.GetByRefreshTokenAsync(request.RefreshToken);
+        if (refreshToken == null || !refreshToken.IsActive)
+        {
+            response.Message = "Недействительный токен обновления";
+            return response;
+        }
+        
+        refreshToken.RevokedAt = DateTime.UtcNow;
+        refreshToken.RevokedByIp = request.Ip;
+        refreshToken.ExpiresAt = DateTime.UtcNow;
+        
+        response.IsSuccess = await _tokensRepository.UpdateAsync(refreshToken);
+        
+        return response;
+    }
+
+    private async Task<bool> SaveRefreshTokensAsync(RefreshToken tokenToPatch, RefreshToken newToken)
+    {
+        await using var transaction = await _tokensRepository.BeginTransactionAsync();
+
+        try
+        {
+            await _tokensRepository.UpdateAsync(tokenToPatch);
+            await _tokensRepository.CreateTokenAsync(newToken);
+        }
+        catch (Exception e)
+        {
+            //todo log
+            return false;
+        }
+
+        await transaction.CommitAsync();
+        
+        return true;
     }
 
     private static EmailMessageEvent GetConfirmEmailModel(string email, string code, string returnUrl)
