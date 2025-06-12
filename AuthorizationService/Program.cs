@@ -11,6 +11,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthorizationServices();
 builder.Services.AddKafkaProducer();
+builder.Services.AddJwtAuthentication();
+
 builder.AddDefaultHealthChecks();
 builder.Host.UseLogger();
 
@@ -38,6 +40,9 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 app.UseStatusCodePages();
 app.UseCors("AllowAll");
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapDefaultEndpoints();
 app.MapAuthorizationApi();

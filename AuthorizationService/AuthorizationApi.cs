@@ -1,7 +1,9 @@
 using AuthorizationService.Helpers;
 using AuthorizationService.Models;
 using AuthorizationService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Lib.Attributes;
 using Shared.Lib.Extensions;
 using Shared.Models;
 
@@ -20,12 +22,13 @@ public static class AuthorizationApi
         builder.MapPost("/confirm", RequestConfirm);
         builder.MapPost("/confirm/{code}", Confirm);
 
-        builder.MapPost("/refresh", Refresh);
+        builder.MapPost("/refresh", RefreshTokens);
         builder.MapPost("/logout", Logout);
         
         return builder;
     }
 
+    [DenyAuthenticated]
     private static async Task<IResult> Login(
         [FromBody] LoginRequest request,
         IAuthorizationManager authorizationManager,
@@ -46,6 +49,7 @@ public static class AuthorizationApi
         return Results.Json(response, statusCode: StatusCodes.Status401Unauthorized);
     }
 
+    [DenyAuthenticated]
     private static async Task<IResult> Register(
         [FromBody] RegisterRequest request,
         IAuthorizationManager authorizationManager)
@@ -64,6 +68,7 @@ public static class AuthorizationApi
         return Results.Json(response, statusCode: StatusCodes.Status401Unauthorized);
     }
     
+    [DenyAuthenticated]
     private static async Task<IResult> RequestRestorePassword(
         [FromBody] RequestRestorePasswordRequest request,
         IAuthorizationManager authorizationManager)
@@ -82,6 +87,7 @@ public static class AuthorizationApi
         return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
     }
     
+    [DenyAuthenticated]
     private static async Task<IResult> RestorePassword(
         IAuthorizationManager authorizationManager, 
         [FromBody] RestorePasswordRequest request,
@@ -101,6 +107,7 @@ public static class AuthorizationApi
         return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
     }
 
+    [DenyAuthenticated]
     private static async Task<IResult> Confirm(string code, IAuthorizationManager authorizationManager)
     {
         var response = new OperationResult();
@@ -116,6 +123,7 @@ public static class AuthorizationApi
         return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
     }
     
+    [DenyAuthenticated]
     private static async Task<IResult> RequestConfirm(IAuthorizationManager authorizationManager, [FromBody] RequestEmailConfirmRequest request)
     {
         var response = new OperationResult();
@@ -132,6 +140,7 @@ public static class AuthorizationApi
         return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
     }
     
+    [Authorize]
     private static async Task<IResult> Logout(IAuthorizationManager authorizationManager, [FromBody] RefreshTokenRequest request)
     {
         var response = new OperationResult();
@@ -148,7 +157,8 @@ public static class AuthorizationApi
         return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
     }
 
-    private static async Task<IResult> Refresh(IAuthorizationManager authorizationManager, [FromBody] RefreshTokenRequest request)
+    [Authorize]
+    private static async Task<IResult> RefreshTokens(IAuthorizationManager authorizationManager, [FromBody] RefreshTokenRequest request)
     {
         var response = new OperationResult();
         
