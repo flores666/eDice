@@ -140,35 +140,25 @@ public static class AuthorizationApi
         return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
     }
     
-    [Authorize]
-    private static async Task<IResult> Logout(IAuthorizationManager authorizationManager, [FromBody] RefreshTokenRequest request)
+    private static async Task<IResult> Logout(IAuthorizationManager authorizationManager, HttpContext context)
     {
-        var response = new OperationResult();
+        if (!context.Request.Cookies.TryGetValue("rt", out var refreshToken)) return Results.Unauthorized();
         
-        if (!ModelValidator.TryValidateObject(request, out var messages))
-        {
-            response.Message = messages.FirstOrDefault();
-            return Results.BadRequest(response);
-        }
+        var request = new RefreshTokenRequest(refreshToken, context.GetUserIp());
         
-        response = await authorizationManager.LogoutAsync(request);
+        var response = await authorizationManager.LogoutAsync(request);
         if (response.IsSuccess) return Results.Ok(response);
         
         return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
     }
-
-    [Authorize]
-    private static async Task<IResult> RefreshTokens(IAuthorizationManager authorizationManager, [FromBody] RefreshTokenRequest request)
+    
+    private static async Task<IResult> RefreshTokens(IAuthorizationManager authorizationManager, HttpContext context)
     {
-        var response = new OperationResult();
+        if (!context.Request.Cookies.TryGetValue("rt", out var refreshToken)) return Results.Unauthorized();
         
-        if (!ModelValidator.TryValidateObject(request, out var messages))
-        {
-            response.Message = messages.FirstOrDefault();
-            return Results.BadRequest(response);
-        }
+        var request = new RefreshTokenRequest(refreshToken, context.GetUserIp());
         
-        response = await authorizationManager.RefreshTokenAsync(request);
+        var response = await authorizationManager.RefreshTokenAsync(request);
         if (response.IsSuccess) return Results.Ok(response);
         
         return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
