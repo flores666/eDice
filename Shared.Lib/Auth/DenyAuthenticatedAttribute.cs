@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Shared.Lib.Attributes;
+namespace Shared.Lib.Auth;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class DenyAuthenticatedAttribute : Attribute, IAuthorizationFilter

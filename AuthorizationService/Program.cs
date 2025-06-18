@@ -1,4 +1,5 @@
 using AuthorizationService;
+using Shared.Lib.Auth;
 using Shared.Lib.Extensions;
 using Shared.Logging;
 using Shared.MessageBus.Kafka;
@@ -11,6 +12,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthorizationServices();
 builder.Services.AddKafkaProducer();
+
+builder.Services.AddDenyAuthenticatedHandler();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddDenyAuthenticatedPolicy();
+});
+
 builder.Services.AddJwtAuthentication();
 
 builder.AddDefaultHealthChecks();

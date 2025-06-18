@@ -1,9 +1,8 @@
 using AuthorizationService.Helpers;
 using AuthorizationService.Models;
 using AuthorizationService.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Lib.Attributes;
+using Shared.Lib.Auth;
 using Shared.Lib.Extensions;
 using Shared.Models;
 
@@ -13,8 +12,8 @@ public static class AuthorizationApi
 {
     public static IEndpointRouteBuilder MapAuthorizationApi(this IEndpointRouteBuilder builder)
     {
-        builder.MapPost("/login", Login);
-        builder.MapPost("/register", Register);
+        builder.MapPost("/login", Login).RequireAuthorization("DenyAuthenticated");
+        builder.MapPost("/register", Register).RequireAuthorization("DenyAuthenticated");
         
         builder.MapPost("/restore", RequestRestorePassword);
         builder.MapPost("/restore/{code}", RestorePassword);
@@ -23,7 +22,7 @@ public static class AuthorizationApi
         builder.MapPost("/confirm/{code}", Confirm);
 
         builder.MapPost("/refresh", RefreshTokens);
-        builder.MapPost("/logout", Logout);
+        builder.MapPost("/logout", Logout).RequireAuthorization();
         
         return builder;
     }
