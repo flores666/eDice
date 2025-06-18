@@ -71,3 +71,15 @@
     environment:
       - KAFKA__BOOTSTRAP_SERVERS=kafka:9092
       - ASPNETCORE_URLS=http://+:83
+  
+  fileservice:
+    build:
+      context: .
+      dockerfile: FileService/Dockerfile
+    env_file:
+      - ./FileService/.env
+    container_name: fileservice
+    ports:
+      - "5004:84"
+    environment:
+      - ASPNETCORE_URLS=http://+:84
