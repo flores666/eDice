@@ -3,23 +3,27 @@ using Google.Apis.Drive.v3;
 using Google.Apis.Drive.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Upload;
+using Infrastructure.FileService;
 using Shared.Logging;
 using Shared.Models;
 using App = Shared.Configuration.App;
-using File = Google.Apis.Drive.v3.Data.File;
+using GoogleDriveFile = Google.Apis.Drive.v3.Data.File;
+using DbaseFile = Infrastructure.FileService.Models.File;
 
 namespace FileService.Service;
 
 public class GoogleDriveFilesManager : IFilesManager
 {
     private readonly IAppLogger<GoogleDriveFilesManager> _logger;
+    private readonly PostgresContext _context;
     private static readonly string[] Scopes = {DriveService.Scope.Drive};
     private readonly DriveService _service;
 
-    public GoogleDriveFilesManager(IAppLogger<GoogleDriveFilesManager> logger)
+    public GoogleDriveFilesManager(IAppLogger<GoogleDriveFilesManager> logger, PostgresContext context)
     {
         _logger = logger;
-        
+        _context = context;
+
         var credential = GoogleCredential.FromJsonParameters(new JsonCredentialParameters
         {
             PrivateKeyId = Environment.GetEnvironmentVariable("GOOGLE_DRIVE__KEY_ID"),
@@ -45,7 +49,7 @@ public class GoogleDriveFilesManager : IFilesManager
         
         try
         {
-            var request = _service.Files.Create(new File
+            var request = _service.Files.Create(new GoogleDriveFile
             {
                 Name = file.FileName,
             }, stream, file.ContentType);
@@ -63,7 +67,7 @@ public class GoogleDriveFilesManager : IFilesManager
                     Role = "reader"
                 }, request.ResponseBody!.Id).ExecuteAsync();
                 
-                result.Data = new ResponseFileModel
+                var responseData = new ResponseFileModel
                 {
                     Id = request.ResponseBody.Id,
                     Name = file.Name,
@@ -71,6 +75,17 @@ public class GoogleDriveFilesManager : IFilesManager
                     Link = $"https://drive.google.com/uc?id={request.ResponseBody.Id}",
                     Size = file.Length
                 };
+                result.Data = responseData;
+
+                await _context.Files.AddAsync(new DbaseFile
+                {
+                    Name = responseData.Name,
+                    Extension = responseData.Extension,
+                    CreatedAt = DateTime.UtcNow,
+                    Size = responseData.Size,
+                    Id = responseData.Id
+                });
+                await _context.SaveChangesAsync();
             }
         }
         catch (Exception e)
@@ -90,6 +105,13 @@ public class GoogleDriveFilesManager : IFilesManager
         {
             await _service.Files.Delete(id).ExecuteAsync();
             result.IsSuccess = true;
+
+            var file = await _context.Files.FindAsync(id);
+            if (file != null)
+            {
+                _context.Files.Remove(file); 
+                await _context.SaveChangesAsync();
+            }
         }
         catch (Google.GoogleApiException e)
         {
