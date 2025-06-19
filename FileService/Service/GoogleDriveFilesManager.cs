@@ -44,6 +44,11 @@ public class GoogleDriveFilesManager : IFilesManager
     public async Task<OperationResult> UploadAsync(IFormFile file)
     {
         var result = new OperationResult();
+        if (await FileValidator.IsValidFileAsync(file))
+        {
+            result.Message = "Похоже что с файлом что-то не так. Еще раз все проверьте";
+            return result;
+        }
 
         await using var stream = file.OpenReadStream();
         
