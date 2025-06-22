@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using File = Infrastructure.FileService.Models.File;
 
 namespace Infrastructure.FileService;
@@ -46,6 +44,7 @@ public partial class PostgresContext : DbContext
                 .HasColumnType("character varying")
                 .HasColumnName("id");
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy).HasColumnName("created_by");
             entity.Property(e => e.Extension)
                 .HasColumnType("character varying")
                 .HasColumnName("extension");

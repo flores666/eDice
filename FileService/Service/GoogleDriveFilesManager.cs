@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using FileService.Helpers;
+﻿using FileService.Helpers;
 using FileService.Models;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
@@ -19,13 +18,15 @@ public class GoogleDriveFilesManager : IFilesManager
 {
     private readonly IAppLogger<GoogleDriveFilesManager> _logger;
     private readonly PostgresContext _context;
+    private readonly IUserContext _userContext;
     private static readonly string[] Scopes = {DriveService.Scope.Drive};
     private readonly DriveService _service;
 
-    public GoogleDriveFilesManager(IAppLogger<GoogleDriveFilesManager> logger, PostgresContext context)
+    public GoogleDriveFilesManager(IAppLogger<GoogleDriveFilesManager> logger, PostgresContext context, IUserContext userContext)
     {
         _logger = logger;
         _context = context;
+        _userContext = userContext;
 
         var credential = GoogleCredential.FromJsonParameters(new JsonCredentialParameters
         {
@@ -95,7 +96,8 @@ public class GoogleDriveFilesManager : IFilesManager
                     CreatedAt = DateTime.UtcNow,
                     Size = responseData.Size,
                     Id = responseData.Id,
-                    Link = responseData.Link
+                    Link = responseData.Link,
+                    CreatedBy = _userContext.Id
                 });
                 await _context.SaveChangesAsync();
             }
@@ -114,14 +116,25 @@ public class GoogleDriveFilesManager : IFilesManager
 
         try
         {
-            await _service.Files.Delete(id).ExecuteAsync();
-            result.IsSuccess = true;
-
             var file = await _context.Files.FindAsync(id);
             if (file != null)
             {
+                if (file.CreatedBy != _userContext.Id)
+                {
+                    result.Message = "Файл вам не принадлежит, удаление невозможно";
+                    return result;
+                }
+                
+                await _service.Files.Delete(id).ExecuteAsync();
+                result.IsSuccess = true;
+             
                 _context.Files.Remove(file); 
                 await _context.SaveChangesAsync();
+            }
+            else
+            {
+                result.Message = "Файл не найден";
+                return result;
             }
         }
         catch (Google.GoogleApiException e)

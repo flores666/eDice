@@ -13,5 +13,6 @@ public partial class File
     public long Size { get; set; }
 
     public string Link { get; set; } = null!;
-}
 
+    public Guid CreatedBy { get; set; }
+}
