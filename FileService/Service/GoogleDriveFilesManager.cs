@@ -1,4 +1,7 @@
-﻿using Google.Apis.Auth.OAuth2;
+﻿using System.Diagnostics;
+using FileService.Helpers;
+using FileService.Models;
+using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 using Google.Apis.Drive.v3.Data;
 using Google.Apis.Services;
@@ -41,28 +44,31 @@ public class GoogleDriveFilesManager : IFilesManager
         });
     }
 
-    public async Task<OperationResult> UploadAsync(IFormFile file)
+    public async Task<OperationResult> UploadAsync(IFormFile? file, UploadOptions? options)
     {
         var result = new OperationResult();
-        if (await FileValidator.IsValidFileAsync(file))
+        if (!await FileValidator.IsValidFileAsync(file))
         {
             result.Message = "Похоже что с файлом что-то не так. Еще раз все проверьте";
             return result;
         }
 
         await using var stream = file.OpenReadStream();
+        var streamToUpload = stream;
+        
+        if (options != null) streamToUpload = await ImageProcessor.CropImageAsync(stream, file.ContentType, options);
         
         try
         {
-            var request = _service.Files.Create(new GoogleDriveFile
+            var mediaUploadRequest = _service.Files.Create(new GoogleDriveFile
             {
                 Name = file.FileName,
-            }, stream, file.ContentType);
+            }, streamToUpload, file.ContentType);
 
-            request.Fields = "id";
+            mediaUploadRequest.Fields = "id";
             
-            var status = await request.UploadAsync();
-            result.IsSuccess = status != null && status.Status == UploadStatus.Completed && !string.IsNullOrEmpty(request.ResponseBody?.Id);
+            var status = await mediaUploadRequest.UploadAsync();
+            result.IsSuccess = status != null && status.Status == UploadStatus.Completed && !string.IsNullOrEmpty(mediaUploadRequest.ResponseBody?.Id);
             
             if (result.IsSuccess)
             {
@@ -70,14 +76,14 @@ public class GoogleDriveFilesManager : IFilesManager
                 {
                     Type = "anyone",
                     Role = "reader"
-                }, request.ResponseBody!.Id).ExecuteAsync();
+                }, mediaUploadRequest.ResponseBody!.Id).ExecuteAsync();
                 
                 var responseData = new ResponseFileModel
                 {
-                    Id = request.ResponseBody.Id,
+                    Id = mediaUploadRequest.ResponseBody.Id,
                     Name = file.Name,
                     Extension = Path.GetExtension(file.FileName),
-                    Link = $"https://drive.google.com/uc?id={request.ResponseBody.Id}",
+                    Link = $"https://drive.google.com/uc?id={mediaUploadRequest.ResponseBody.Id}",
                     Size = file.Length
                 };
                 result.Data = responseData;
@@ -88,14 +94,14 @@ public class GoogleDriveFilesManager : IFilesManager
                     Extension = responseData.Extension,
                     CreatedAt = DateTime.UtcNow,
                     Size = responseData.Size,
-                    Id = responseData.Id
+                    Id = responseData.Id,
+                    Link = responseData.Link
                 });
                 await _context.SaveChangesAsync();
             }
         }
         catch (Exception e)
         {
-            stream.Close();
             _logger.LogWarning(e.ToString());
         }
 
