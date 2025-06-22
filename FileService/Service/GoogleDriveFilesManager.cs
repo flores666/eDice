@@ -56,7 +56,7 @@ public class GoogleDriveFilesManager : IFilesManager
         await using var stream = file.OpenReadStream();
         var streamToUpload = stream;
         
-        if (options != null) streamToUpload = await ImageProcessor.CropImageAsync(stream, file.ContentType, options);
+        if (options != null) streamToUpload = await ImageProcessor.ResizeImageAsync(stream, file.ContentType, options);
         
         try
         {

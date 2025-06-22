@@ -8,7 +8,7 @@ namespace FileService.Helpers;
 
 public static class ImageProcessor
 {
-    public static async Task<MemoryStream> CropImageAsync(Stream inputStream, string contentType, UploadOptions options)
+    public static async Task<MemoryStream> ResizeImageAsync(Stream inputStream, string contentType, UploadOptions options)
     {
         if (!contentType.StartsWith("image")) throw new UnsupportedContentTypeException("Provided file is not an image");
     
