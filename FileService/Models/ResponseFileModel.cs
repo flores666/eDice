@@ -1,4 +1,4 @@
-﻿namespace FileService;
+﻿namespace FileService.Models;
 
 public class ResponseFileModel
 {

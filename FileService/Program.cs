@@ -1,6 +1,8 @@
 using DotNetEnv;
 using FileService;
 using FileService.Service;
+using Infrastructure.FileService;
+using Microsoft.EntityFrameworkCore;
 using Shared.Lib.Extensions;
 using Shared.Logging;
 
@@ -12,6 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAuthorization();
 builder.Services.AddJwtAuthentication();
 builder.Host.UseLogger();
+builder.Services.AddDbContext<PostgresContext>(options => options.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING")));
 
 builder.Services.AddScoped<IFilesManager, GoogleDriveFilesManager>();
 builder.Services.AddCors(options =>

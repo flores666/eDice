@@ -1,6 +1,8 @@
-﻿namespace FileService;
+﻿using System.Diagnostics.CodeAnalysis;
 
-public class FileValidator
+namespace FileService.Helpers;
+
+public static class FileValidator
 {
     private static readonly HashSet<string> AllowedImageMimeTypes = new()
     {
@@ -18,7 +20,7 @@ public class FileValidator
         "text/csv", "text/xml",
     };
 
-    public static async Task<bool> IsValidFileAsync(IFormFile file)
+    public static async Task<bool> IsValidFileAsync([NotNullWhen(true)]IFormFile? file)
     {
         if (file == null || file.Length == 0)
             return false;
