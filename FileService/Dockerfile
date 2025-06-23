@@ -12,6 +12,7 @@ COPY Shared.Lib/ Shared.Lib/
 COPY Shared.Logging/ Shared.Logging/
 COPY Shared.Models/ Shared.Models/
 COPY Shared.Configuration/ Shared.Configuration/
+COPY Shared.MessageBus.Kafka/ Shared.MessageBus.Kafka/
 
 RUN dotnet restore "FileService/FileService.csproj"
 RUN dotnet build   "FileService/FileService.csproj" -c $BUILD_CONFIGURATION -o /app/build
