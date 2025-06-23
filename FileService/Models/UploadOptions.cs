@@ -7,6 +7,6 @@ public class UploadOptions
     [JsonPropertyName("width")]
     public int? Width { get; set; }
 
-    [JsonPropertyName("heigth")]
+    [JsonPropertyName("height")]
     public int? Height { get; set; }
 }
