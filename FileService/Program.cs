@@ -5,6 +5,7 @@ using Infrastructure.FileService;
 using Microsoft.EntityFrameworkCore;
 using Shared.Lib.Extensions;
 using Shared.Logging;
+using Shared.MessageBus.Kafka;
 
 Env.Load();
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,8 @@ builder.Services.AddDbContext<PostgresContext>(options => options.UseNpgsql(Envi
 builder.Services.AddScoped<IFilesManager, GoogleDriveFilesManager>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContext, UserContext>();
+
+builder.Services.AddKafkaProducer();
 
 builder.Services.AddCors(options =>
 {

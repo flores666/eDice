@@ -1,4 +1,5 @@
-﻿using FileService.Helpers;
+﻿using FileService.Configuration;
+using FileService.Helpers;
 using FileService.Models;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
@@ -7,6 +8,7 @@ using Google.Apis.Services;
 using Google.Apis.Upload;
 using Infrastructure.FileService;
 using Shared.Logging;
+using Shared.MessageBus.Kafka.Producer;
 using Shared.Models;
 using App = Shared.Configuration.App;
 using GoogleDriveFile = Google.Apis.Drive.v3.Data.File;
@@ -19,14 +21,17 @@ public class GoogleDriveFilesManager : IFilesManager
     private readonly IAppLogger<GoogleDriveFilesManager> _logger;
     private readonly PostgresContext _context;
     private readonly IUserContext _userContext;
+    private readonly IMessagesProducer<FileUploadedMessage> _messagesProducer;
     private static readonly string[] Scopes = {DriveService.Scope.Drive};
     private readonly DriveService _service;
 
-    public GoogleDriveFilesManager(IAppLogger<GoogleDriveFilesManager> logger, PostgresContext context, IUserContext userContext)
+    public GoogleDriveFilesManager(IAppLogger<GoogleDriveFilesManager> logger, PostgresContext context, IUserContext userContext,
+        IMessagesProducer<FileUploadedMessage> messagesProducer)
     {
         _logger = logger;
         _context = context;
         _userContext = userContext;
+        _messagesProducer = messagesProducer;
 
         var credential = GoogleCredential.FromJsonParameters(new JsonCredentialParameters
         {
@@ -79,27 +84,21 @@ public class GoogleDriveFilesManager : IFilesManager
                     Role = "reader"
                 }, mediaUploadRequest.ResponseBody!.Id).ExecuteAsync();
                 
-                var responseData = new ResponseFileModel
+                var dbFileModel = new DbaseFile
                 {
-                    Id = mediaUploadRequest.ResponseBody.Id,
                     Name = file.Name,
                     Extension = Path.GetExtension(file.FileName),
-                    Link = $"https://drive.google.com/uc?id={mediaUploadRequest.ResponseBody.Id}",
-                    Size = file.Length
-                };
-                result.Data = responseData;
-
-                await _context.Files.AddAsync(new DbaseFile
-                {
-                    Name = responseData.Name,
-                    Extension = responseData.Extension,
                     CreatedAt = DateTime.UtcNow,
-                    Size = responseData.Size,
-                    Id = responseData.Id,
-                    Link = responseData.Link,
+                    Size = file.Length,
+                    Id = mediaUploadRequest.ResponseBody.Id,
+                    Link = $"https://drive.google.com/uc?id={mediaUploadRequest.ResponseBody.Id}",
                     CreatedBy = _userContext.Id
-                });
+                };
+                
+                result.Data = dbFileModel;
+                await _context.Files.AddAsync(dbFileModel);
                 await _context.SaveChangesAsync();
+                await _messagesProducer.PublishAsync(MessagesTopics.FileUploaded, FileUploadMessageConverter.FromDbModel(dbFileModel));
             }
         }
         catch (Exception e)
