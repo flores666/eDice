@@ -34,7 +34,7 @@
     build:
       context: ./GatewayService
       dockerfile: Dockerfile
-    container_name: gateway
+    container_name: GatewayService
     ports:
       - "5002:82"
     environment:
@@ -46,7 +46,7 @@
       dockerfile: AuthorizationService/Dockerfile
     env_file:
       - ./AuthorizationService/.env
-    container_name: authorization
+    container_name: AuthorizationService
     depends_on:
       kafka:
         condition: service_healthy
@@ -62,7 +62,7 @@
       dockerfile: MailService/Dockerfile
     env_file:
       - ./MailService/.env
-    container_name: mail
+    container_name: MailService
     depends_on:
       kafka:
         condition: service_healthy
@@ -78,7 +78,7 @@
       dockerfile: FileService/Dockerfile
     env_file:
       - ./FileService/.env
-    container_name: fileservice
+    container_name: FileService
     depends_on:
       kafka:
         condition: service_healthy
@@ -87,3 +87,19 @@
     environment:
       - KAFKA__BOOTSTRAP_SERVERS=kafka:9092
       - ASPNETCORE_URLS=http://+:84
+
+  assetcrafterservice:
+    build:
+      context: .
+      dockerfile: AssetCrafterService/Dockerfile
+    env_file:
+      - ./AssetCrafterService/.env
+    container_name: AssetCrafterService
+    depends_on:
+      kafka:
+        condition: service_healthy
+    ports:
+      - "5005:85"
+    environment:
+      - KAFKA__BOOTSTRAP_SERVERS=kafka:9092
+      - ASPNETCORE_URLS=http://+:85
