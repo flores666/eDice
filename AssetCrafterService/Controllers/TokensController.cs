@@ -30,6 +30,18 @@ public class TokensController : Controller
 
         return result;
     }
+    
+    [HttpGet("{id:guid}")]
+    [AllowAnonymous]
+    public async Task<OperationResult> GetToken(Guid id)
+    {
+        var result = new OperationResult
+        {
+            Data = await _tokensService.GetTokenAsync(id)
+        };
+
+        return result;
+    }
 
     [HttpPost]
     public async Task<OperationResult> CreateToken(TokenDto token)

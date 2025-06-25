@@ -22,4 +22,6 @@ public class TokenDto
     public bool IsPublic { get; set; }
     
     public Guid CreatedBy { get; set; }
+    public bool IsOfficial { get; set; }
+    public bool IsConfirmed { get; set; }
 }

@@ -1,3 +1,4 @@
+using AssetCrafterService.Services;
 using Shared.Lib.Extensions;
 using Shared.Logging;
 using Shared.MessageBus.Kafka;
@@ -9,6 +10,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddKafkaProducer();
+builder.Services.AddScoped<ITokensService, TokensService>();
 
 builder.Services.AddJwtAuthentication();
 
