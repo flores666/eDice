@@ -9,8 +9,8 @@ namespace AssetCrafterService.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("/tokens")]
-public class TokensController : Controller
+[Route("tokens")]
+public class TokensController : ControllerBase
 {
     private readonly ITokensService _tokensService;
 
@@ -25,7 +25,8 @@ public class TokensController : Controller
     {
         var result = new OperationResult
         {
-            Data = await _tokensService.GetTokensAsync(filter)
+            Data = await _tokensService.GetTokensAsync(filter),
+            IsSuccess = true
         };
 
         return result;
@@ -35,12 +36,14 @@ public class TokensController : Controller
     [AllowAnonymous]
     public async Task<OperationResult> GetToken(Guid id)
     {
-        var result = new OperationResult
+        var token = await _tokensService.GetTokenAsync(id);
+        if (token == null) return OperationResult.Fail("Запись не найдена");
+        
+        return new OperationResult
         {
-            Data = await _tokensService.GetTokenAsync(id)
+            Data = token,
+            IsSuccess = true
         };
-
-        return result;
     }
 
     [HttpPost]

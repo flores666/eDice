@@ -1,20 +1,26 @@
 using AssetCrafterService.Services;
+using DotNetEnv;
+using Infrastructure.AssetCrafterService;
+using Microsoft.EntityFrameworkCore;
 using Shared.Lib.Extensions;
 using Shared.Logging;
 using Shared.MessageBus.Kafka;
 
+Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddKafkaProducer();
-builder.Services.AddScoped<ITokensService, TokensService>();
-
+builder.Services.AddAuthorization();
 builder.Services.AddJwtAuthentication();
-
+builder.Services.AddControllers();
 builder.Host.UseLogger();
+builder.Services.AddDbContext<PostgresContext>(options => options.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING")));
+
+builder.Services.AddScoped<ITokensService, TokensService>();
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddKafkaProducer();
 
 builder.Services.AddCors(options =>
 {
@@ -37,6 +43,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapControllers();
 // app.UseHttpsRedirection();
 app.UseStatusCodePages();
 app.UseCors("AllowAll");

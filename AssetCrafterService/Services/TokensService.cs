@@ -17,7 +17,9 @@ public class TokensService : ITokensService
     
     public async Task<List<TokenDto>> GetTokensAsync(FilterModel filter)
     {
-        return await _context.Tokens.Paginate(filter.Page, filter.Size)
+        return await _context.Tokens
+            .OrderBy(o => o.CreatedAt)
+            .Paginate(filter.Page, filter.Size)
             .Select(s => TokenMapper.ToDto(s))
             .ToListAsync();
     }
@@ -43,7 +45,12 @@ public class TokensService : ITokensService
 
     public async Task<OperationResult> UpdateTokenAsync(TokenDto token)
     {
-        // todo
+        var model = TokenMapper.ToEntity(token);
+        _context.Entry(model).State = EntityState.Modified;
+        
+        var isSuccess = await _context.SaveChangesAsync() > 0;
+        if (isSuccess) return OperationResult.Ok();
+        
         return OperationResult.Fail("Что-то пошло не так, изменения сохранить не удалось");
     }
 
