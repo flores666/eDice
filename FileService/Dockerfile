@@ -7,6 +7,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # в контексте уже лежат все файлы проекта (csproj, Program.cs, Controllers и т.д.)
+COPY Infrastructure.FileService/ Infrastructure.FileService/
 COPY FileService/ FileService/
 COPY Shared.Lib/ Shared.Lib/
 COPY Shared.Logging/ Shared.Logging/
