@@ -43,10 +43,13 @@ public class TokensService : ITokensService
         return OperationResult.Fail("Что-то пошло не так, изменения сохранить не удалось");
     }
 
-    public async Task<OperationResult> UpdateTokenAsync(TokenDto token)
+    public async Task<OperationResult> UpdateTokenAsync(TokenDto tokenDto)
     {
-        var model = TokenMapper.ToEntity(token);
-        _context.Entry(model).State = EntityState.Modified;
+        var token = await _context.Tokens.FindAsync(tokenDto.Id);
+        if (token == null) return OperationResult.Fail("Токен не найден");
+        
+        var isChanged = TokenMapper.ChangeEntity(tokenDto, token);
+        if (!isChanged) return OperationResult.Ok("Ничего не изменилось");
         
         var isSuccess = await _context.SaveChangesAsync() > 0;
         if (isSuccess) return OperationResult.Ok();
