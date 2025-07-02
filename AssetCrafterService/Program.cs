@@ -11,8 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddAuthorization();
+
 builder.Services.AddJwtAuthentication();
+builder.Services.AddAuthorization();
+
 builder.Services.AddControllers();
 builder.Host.UseLogger();
 builder.Services.AddDbContext<PostgresContext>(options => options.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING")));
@@ -43,13 +45,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapControllers();
 // app.UseHttpsRedirection();
 app.UseStatusCodePages();
 app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllers();
 
 app.UseHsts();
 
