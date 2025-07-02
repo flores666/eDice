@@ -1,4 +1,5 @@
 using AuthorizationService;
+using DotNetEnv;
 using Shared.Lib.Auth;
 using Shared.Lib.Extensions;
 using Shared.Logging;
@@ -6,6 +7,7 @@ using Shared.MessageBus.Kafka;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Env.Load();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
