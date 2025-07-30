@@ -1,8 +1,8 @@
-﻿namespace AuthorizationService.Helpers;
+namespace UsersCoordinatorService.Handlers.UserRegistration;
 
 public static class EmailTemplates
 {
-    public static string GetConfirmEmailBody(string returnUrl, string code) => $@"
+    public static string GetConfirmEmailBody(string endpointUrl, string code) => $@"
 <!DOCTYPE html>
 <html lang=""ru"">
 <head>
@@ -48,7 +48,7 @@ public static class EmailTemplates
     <p>Пожалуйста, подтвердите ваш адрес электронной почты, нажав на кнопку ниже:</p>
 
     <p style=""text-align: center; margin: 30px 0;"">
-      <a href=""{returnUrl.TrimEnd('/') + '/'}?code={code}"" class=""button"">Подтвердить email</a>
+      <a href=""{endpointUrl.TrimEnd('/') + '/'}?code={code}"" class=""button"">Подтвердить email</a>
     </p>
 
     <p>Если вы не регистрировались на eDice, просто проигнорируйте это письмо.</p>
@@ -60,7 +60,7 @@ public static class EmailTemplates
 </body>
 </html>";
 
-    public static string GetRestorePasswordBody(string returnUrl, string code) => $@"
+    public static string GetRestorePasswordBody(string endpointUrl, string code) => $@"
 <!DOCTYPE html>
 <html lang=""ru"">
 <head>
@@ -106,7 +106,7 @@ public static class EmailTemplates
     <p>Пожалуйста, подтвердите ваш пароль, нажав на кнопку ниже:</p>
 
     <p style=""text-align: center; margin: 30px 0;"">
-      <a href=""{returnUrl.TrimEnd('/') + '/'}?code={code}"" class=""button"">Подтвердить пароль</a>
+      <a href=""{endpointUrl.TrimEnd('/') + '/'}?code={code}"" class=""button"">Подтвердить пароль</a>
     </p>
 
     <p>Если вы не запрашивали подтверждение пароля, просто проигнорируйте это письмо.</p>

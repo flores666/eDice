@@ -51,6 +51,7 @@
       context: .
       dockerfile: AuthorizationService/Dockerfile
     env_file:
+      - .env
       - ./AuthorizationService/.env
     container_name: AuthorizationService
     depends_on:
@@ -67,6 +68,7 @@
       context: .
       dockerfile: MailService/Dockerfile
     env_file:
+      - .env
       - ./MailService/.env
     container_name: MailService
     depends_on:
@@ -83,6 +85,7 @@
       context: .
       dockerfile: FileService/Dockerfile
     env_file:
+      - .env
       - ./FileService/.env
     container_name: FileService
     depends_on:
@@ -99,6 +102,7 @@
       context: .
       dockerfile: AssetCrafterService/Dockerfile
     env_file:
+      - .env
       - ./AssetCrafterService/.env
     container_name: AssetCrafterService
     depends_on:
@@ -115,6 +119,7 @@
       context: .
       dockerfile: UsersCoordinatorService/Dockerfile
     env_file:
+      - .env
       - ./UsersCoordinatorService/.env
     container_name: UsersCoordinatorService
     depends_on:

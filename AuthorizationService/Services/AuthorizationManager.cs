@@ -2,6 +2,7 @@
 using AuthorizationService.Helpers;
 using AuthorizationService.Helpers.UserValidator;
 using AuthorizationService.Models;
+using AuthorizationService.Models.Event;
 using AuthorizationService.Models.Tokens;
 using AuthorizationService.Repository;
 using Infrastructure.AuthorizationService.Models;
@@ -16,10 +17,10 @@ public class AuthorizationManager : IAuthorizationManager
 {
     private readonly IUsersRepository _usersRepository;
     private readonly ITokensRepository _tokensRepository;
-    private readonly IMessagesProducer<EmailMessageEvent> _messagesProducer;
+    private readonly IMessagesProducer<UserMessage> _messagesProducer;
 
     public AuthorizationManager(IUsersRepository usersRepository, ITokensRepository tokensRepository,
-        IMessagesProducer<EmailMessageEvent> messagesProducer)
+        IMessagesProducer<UserMessage> messagesProducer)
     {
         _usersRepository = usersRepository;
         _tokensRepository = tokensRepository;
@@ -75,7 +76,7 @@ public class AuthorizationManager : IAuthorizationManager
         }
 
         var confirmCode = Guid.NewGuid().ToString().AsSpan(0, 8).ToString();
-        response.IsSuccess = await _usersRepository.CreateUserAsync(new User
+        user = new User
         {
             Email = request.Login,
             Name = request.UserName,
@@ -84,11 +85,19 @@ public class AuthorizationManager : IAuthorizationManager
             CodeRequestedAt = DateTime.UtcNow,
             CreatedAt = DateTime.UtcNow,
             ResetCode = confirmCode
-        });
-
+        };
+        
+        response.IsSuccess = await _usersRepository.CreateUserAsync(user);
         if (response.IsSuccess)
         {
-            await _messagesProducer.PublishAsync(KafkaTopics.UserCreated, GetConfirmEmailModel(request.Login, confirmCode, request.ReturnUrl));
+            await _messagesProducer.PublishAsync(KafkaTopics.UserCreated, new UserMessage
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Name = user.Name,
+                CreatedAt = user.CreatedAt,
+                ResetCode = user.ResetCode
+            });
         }
 
         return response;
@@ -122,7 +131,14 @@ public class AuthorizationManager : IAuthorizationManager
         response.IsSuccess = await _usersRepository.UpdateUserAsync(user);
         if (response.IsSuccess)
         {
-            await _messagesProducer.PublishAsync(KafkaTopics.PasswordResetRequested, GetRestorePasswordEmailModel(user.Email, user.ResetCode, request.ReturnUrl));
+            await _messagesProducer.PublishAsync(KafkaTopics.PasswordResetRequested, new UserMessage
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Name = user.Name,
+                CreatedAt = user.CreatedAt,
+                ResetCode = user.ResetCode
+            });
         }
 
         return response;
@@ -201,7 +217,14 @@ public class AuthorizationManager : IAuthorizationManager
         response.IsSuccess = await _usersRepository.UpdateUserAsync(user);
         if (response.IsSuccess)
         {
-            await _messagesProducer.PublishAsync(KafkaTopics.EmailConfirmRequested, GetConfirmEmailModel(request.Email, user.ResetCode, request.ReturnUrl));
+            await _messagesProducer.PublishAsync(KafkaTopics.EmailConfirmRequested, new UserMessage
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Name = user.Name,
+                CreatedAt = user.CreatedAt,
+                ResetCode = user.ResetCode
+            });
         }
 
         return response;
@@ -274,25 +297,5 @@ public class AuthorizationManager : IAuthorizationManager
         await transaction.CommitAsync();
         
         return true;
-    }
-
-    private static EmailMessageEvent GetConfirmEmailModel(string email, string code, string returnUrl)
-    {
-        return new EmailMessageEvent
-        {
-            To = email,
-            Subject = "Подтверждение адреса электронной почты",
-            Body = EmailTemplates.GetConfirmEmailBody(returnUrl, code)
-        };
-    }
-
-    private static EmailMessageEvent GetRestorePasswordEmailModel(string email, string code, string returnUrl)
-    {
-        return new EmailMessageEvent
-        {
-            To = email,
-            Subject = "Восстановление пароля",
-            Body = EmailTemplates.GetRestorePasswordBody(returnUrl, code)
-        };
     }
 }
