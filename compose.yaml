@@ -109,3 +109,19 @@
     environment:
       - KAFKA__BOOTSTRAP_SERVERS=kafka:9092
       - ASPNETCORE_URLS=http://+:85
+
+  userscoorinatorservice:
+    build:
+      context: .
+      dockerfile: UsersCoordinatorService/Dockerfile
+    env_file:
+      - ./UsersCoordinatorService/.env
+    container_name: UsersCoordinatorService
+    depends_on:
+      kafka:
+        condition: service_healthy
+    ports:
+      - "5006:86"
+    environment:
+      - KAFKA__BOOTSTRAP_SERVERS=kafka:9092
+      - ASPNETCORE_URLS=http://+:86
