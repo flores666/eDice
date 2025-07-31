@@ -2,53 +2,63 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using Shared.Logging;
 
 namespace MailService;
 
 public class SmtpService : ISmtpService
 {
+    private readonly IAppLogger<SmtpService> _logger;
     private readonly SmtpSettings _smtpSettings;
-    
-    public SmtpService(IOptions<SmtpSettings> smtpOptions)
+
+    public SmtpService(IOptions<SmtpSettings> smtpOptions, IAppLogger<SmtpService> logger)
     {
+        _logger = logger;
         _smtpSettings = smtpOptions.Value;
     }
-    
+
     public async Task SendEmailAsync(string to, string subject, string body)
     {
+        if (_logger.IsDebugEnabled)
+            _logger.LogDebug("SmtpService -> Sending email");
+
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress(_smtpSettings.FromName, _smtpSettings.FromEmail));
         message.To.Add(MailboxAddress.Parse(to));
-        // Тема письма
         message.Subject = subject;
-        
+
         var bodyBuilder = new BodyBuilder
         {
             HtmlBody = body
         };
         message.Body = bodyBuilder.ToMessageBody();
-        
+
         using var smtpClient = new SmtpClient();
         try
         {
-            var socketOption = _smtpSettings.EnableSsl 
-                ? SecureSocketOptions.StartTls 
-                : SecureSocketOptions.Auto;
-            
-            await smtpClient.ConnectAsync(_smtpSettings.Host, _smtpSettings.Port, socketOption);
+            await smtpClient.ConnectAsync(_smtpSettings.Host, _smtpSettings.Port, SecureSocketOptions.StartTls);
+
+            if (_logger.IsDebugEnabled)
+                _logger.LogDebug("SmtpService -> Connected to Gmail SMTP server");
+
             await smtpClient.AuthenticateAsync(_smtpSettings.Username, _smtpSettings.Password);
 
-            // Отправляем письмо
+            if (_logger.IsDebugEnabled)
+                _logger.LogDebug("SmtpService -> Authenticated to Gmail SMTP server");
+
             await smtpClient.SendAsync(message);
+
+            if (_logger.IsDebugEnabled)
+                _logger.LogDebug("SmtpService -> Message sent");
         }
-        catch
+        catch (Exception ex)
         {
-            throw;
+            _logger.LogError(ex, "SmtpService -> Error sending email");
         }
         finally
         {
-            await smtpClient.DisconnectAsync(true);
+            if (smtpClient.IsConnected)
+                await smtpClient.DisconnectAsync(true);
         }
     }
-    
 }

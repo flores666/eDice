@@ -1,5 +1,6 @@
-using MailService.Models;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using Shared.Logging;
 
 namespace MailService.Test;
 
@@ -33,7 +34,7 @@ public class Tests
     [Test]
     public void SendMail_CallsEmailSender()
     {
-        var smtpService = new SmtpService(CreateOptions());
+        var smtpService = new SmtpService(CreateOptions(), new AppLogger<SmtpService>(new NullLogger<SmtpService>()));
         
         Assert.DoesNotThrowAsync(async () =>
         {

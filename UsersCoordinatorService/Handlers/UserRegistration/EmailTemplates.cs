@@ -48,7 +48,7 @@ public static class EmailTemplates
     <p>Пожалуйста, подтвердите ваш адрес электронной почты, нажав на кнопку ниже:</p>
 
     <p style=""text-align: center; margin: 30px 0;"">
-      <a href=""{endpointUrl.TrimEnd('/') + '/'}?code={code}"" class=""button"">Подтвердить email</a>
+      <a href=""{endpointUrl.TrimEnd('/')}/lk/confirm-email?code={code}"" class=""button"">Подтвердить email</a>
     </p>
 
     <p>Если вы не регистрировались на eDice, просто проигнорируйте это письмо.</p>
@@ -106,7 +106,7 @@ public static class EmailTemplates
     <p>Пожалуйста, подтвердите ваш пароль, нажав на кнопку ниже:</p>
 
     <p style=""text-align: center; margin: 30px 0;"">
-      <a href=""{endpointUrl.TrimEnd('/') + '/'}?code={code}"" class=""button"">Подтвердить пароль</a>
+      <a href=""{endpointUrl.TrimEnd('/')}/lk/restore?code={code}"" class=""button"">Подтвердить пароль</a>
     </p>
 
     <p>Если вы не запрашивали подтверждение пароля, просто проигнорируйте это письмо.</p>
