@@ -14,25 +14,29 @@ public class KafkaMessagesConsumer<TMessage> : BackgroundService
     private readonly string _topic;
     private readonly IConsumer<string, TMessage> _consumer;
 
-    public KafkaMessagesConsumer(IOptions<KafkaConsumerOptions> consumerOptions, IMessagesHandler<TMessage> handler,
+    public KafkaMessagesConsumer(IOptionsMonitor<KafkaConsumerOptions> consumerOptions, IMessagesHandler<TMessage> handler,
         IAppLogger<KafkaMessagesConsumer<TMessage>> logger, IAppLogger<KafkaValueDeserializer<TMessage>> deserializerLogger)
     {
         _logger = logger;
         _handler = handler;
+        
+        _logger.LogInformation("TMessage = {T}", typeof(TMessage).Name);
+        
+        var options = consumerOptions.Get(typeof(TMessage).Name);
         var config = new ConsumerConfig
         {
             BootstrapServers = KafkaOptions.BootstrapServers,
             AutoOffsetReset = AutoOffsetReset.Earliest,
-            GroupId = consumerOptions.Value.GroupId
+            GroupId = options.GroupId
         };
 
-        _topic = consumerOptions.Value.Topic;
+        _topic = options.Topic;
 
         _consumer = new ConsumerBuilder<string, TMessage>(config)
             .SetValueDeserializer(new KafkaValueDeserializer<TMessage>(deserializerLogger))
             .Build();
         
-        _logger.LogInformation("Consumer initialized with group: {G} and topic: {T}", consumerOptions.Value.GroupId, consumerOptions.Value.Topic);
+        _logger.LogInformation("Consumer initialized with group: {G} and topic: {T}", options.GroupId, options.Topic);
     }
     
     protected override Task ExecuteAsync(CancellationToken stoppingToken)

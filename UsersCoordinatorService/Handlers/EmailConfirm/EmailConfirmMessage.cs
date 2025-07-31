@@ -1,6 +1,6 @@
-namespace UsersCoordinatorService.MessageModels;
+namespace UsersCoordinatorService.Handlers.EmailConfirm;
 
-public class UserMessage
+public class EmailConfirmMessage
 {
     public Guid Id { get; set; }
 

@@ -18,7 +18,7 @@ builder.Services.Configure<SmtpSettings>(
     builder.Configuration.GetSection("SmtpSettings")
 );
 
-builder.Services.AddKafkaConsumer<EmailRequest, EmailEventHandler>(builder.Configuration.GetSection("KafkaConsumerOptions:Emails"));
+builder.Services.AddKafkaConsumer<EmailRequest, EmailEventHandler>(builder.Configuration.GetSection("KafkaConsumerOptions:EmailRequest"));
 
 builder.Services.AddTransient<ISmtpService, SmtpService>();
 builder.Host.UseLoggerMinimalApi();
