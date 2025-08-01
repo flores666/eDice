@@ -56,6 +56,8 @@ public class AuthorizationManager : IAuthorizationManager
                 RefreshToken = token.RefreshToken.Token,
                 AccessToken = token.AccessToken
             };
+            
+            response.Message = "Авторизация прошла успешно";
         }
 
         return response;
@@ -98,6 +100,8 @@ public class AuthorizationManager : IAuthorizationManager
                 CreatedAt = user.CreatedAt,
                 ResetCode = user.ResetCode
             });
+            
+            response.Message = "Для завершения регистрации мы отправили ссылку на вашу почту. Следуйте инструкциям в письме";
         }
 
         return response;
@@ -139,6 +143,8 @@ public class AuthorizationManager : IAuthorizationManager
                 CreatedAt = user.CreatedAt,
                 ResetCode = user.ResetCode
             });
+            
+            response.Message = "Для восстановления пароля мы отправили ссылку на вашу почту. Следуйте инструкциям в письме";
         }
 
         return response;
@@ -165,6 +171,7 @@ public class AuthorizationManager : IAuthorizationManager
         user.CodeRequestedAt = null;
         user.ResetCode = null;
         response.IsSuccess = await _usersRepository.UpdateUserAsync(user);
+        if (response.IsSuccess) response.Message = "Пароль успешно обновлен";
 
         return response;
     }
@@ -185,6 +192,7 @@ public class AuthorizationManager : IAuthorizationManager
         user.CodeRequestedAt = null;
         user.ResetCode = null;
         response.IsSuccess = await _usersRepository.UpdateUserAsync(user);
+        if (response.IsSuccess) response.Message = "Почта успешно подтверждена";
 
         return response;
     }
@@ -225,6 +233,8 @@ public class AuthorizationManager : IAuthorizationManager
                 CreatedAt = user.CreatedAt,
                 ResetCode = user.ResetCode
             });
+            
+            response.Message = "Для подтверждения почты мы отправили туда ссылку. Следуйте инструкциям в письме";
         }
 
         return response;
