@@ -2,13 +2,17 @@
 
 public class OperationResult
 {
+    private string? _message;
     public bool IsSuccess { get; set; }
-    public string? Message { get; set; }
-    public string? ErrorMessage { get; set; }
-    public IEnumerable<string>? ErrorMessages { get; set; }
+    
+    public string Message
+    {
+        get => _message ?? (IsSuccess ? "Все прошло успешно" : "Что-то пошло не так"); 
+        set => _message = value; 
+    } 
+    
     public object? Data { get; set; }
 
-    public static OperationResult Ok(string? message = null) => new() { IsSuccess = true, Data = message };
-    public static OperationResult Fail(string error, string? message = null) => new() { IsSuccess = false, Data = message, ErrorMessage = error };
-    public static OperationResult Fail(IEnumerable<string> errors, string? message = null) => new() { IsSuccess = false, Data = message, ErrorMessages = errors };
+    public static OperationResult Ok(string? message = null) => new() { IsSuccess = true, Message = message };
+    public static OperationResult Fail(string error) => new() { IsSuccess = false, Message = error };
 }

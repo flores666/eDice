@@ -30,7 +30,7 @@ public class SmtpController(IAppLogger<SmtpController> logger, ISmtpService smtp
             
             logger.LogWarning("Validation failed. Errors: {Errors}", errors);
             
-            var result = OperationResult.Fail(errors, "Поля To, Subject и Body обязательны и должны быть корректными.");
+            var result = OperationResult.Fail("Поля To, Subject и Body обязательны и должны быть корректными.");
             return BadRequest(result);
         }
 
@@ -45,7 +45,7 @@ public class SmtpController(IAppLogger<SmtpController> logger, ISmtpService smtp
         }
         catch (Exception ex)
         {
-            var result = OperationResult.Fail(new[] { ex.Message }, "Произошла внутренняя ошибка при отправке письма.");
+            var result = OperationResult.Fail("Произошла внутренняя ошибка при отправке письма.");
             logger.LogCritical(ex, $"Error sending email: {ex.Message}");
             return StatusCode(500, result);
         }
