@@ -126,8 +126,8 @@ public class AuthorizationManager : IAuthorizationManager
             var nextCodeRequestDate = user.CodeRequestedAt.Value.Add(Constants.RestoreCodeDelay);
             if (DateTime.UtcNow < nextCodeRequestDate)
             {
-                var time = (nextCodeRequestDate - DateTime.UtcNow).ToReadableString();
-                response.Message = $"Запросить код повторно можно будет через {time}";
+                var time = nextCodeRequestDate - DateTime.UtcNow;
+                response.Message = $"Запросить код повторно можно будет через {time.ToReadableString()}";
                 response.Data = time;
                 response.Reason = OperationReasons.CodeTimeout;
                 return response;
@@ -219,8 +219,8 @@ public class AuthorizationManager : IAuthorizationManager
             var nextCodeRequestDate = user.CodeRequestedAt.Value.Add(Constants.ConfirmEmailDelay);
             if (DateTime.UtcNow < nextCodeRequestDate)
             {
-                var time = (nextCodeRequestDate - DateTime.UtcNow).ToReadableString();
-                response.Message = $"Запросить код повторно можно будет через {time}";
+                var time = nextCodeRequestDate - DateTime.UtcNow;
+                response.Message = $"Запросить код повторно можно будет через {time.ToReadableString()}";
                 response.Data = time;
                 response.Reason = OperationReasons.CodeTimeout;
                 return response;
