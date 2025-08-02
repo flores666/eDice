@@ -41,7 +41,7 @@ public class AuthorizationManager : IAuthorizationManager
         if (!UserValidator.IsValidWithEmail(user, out var message))
         {
             response.Message = message;
-            if (!user.EmailConfirmed) response.Data = user.Email;
+            if (!user.EmailConfirmed) response.Reason = OperationReasons.EmailConfirmRequired;
 
             return response;
         }
@@ -74,6 +74,8 @@ public class AuthorizationManager : IAuthorizationManager
                 ? "Похоже, эта электронная почта уже зарегистрирована. Попробуйте войти или использовать другую"
                 : "Пожалуйста, подтвердите свою почту — мы отправили вам письмо с ссылкой";
 
+            if (!user.EmailConfirmed) response.Reason = OperationReasons.EmailConfirmRequired;
+
             return response;
         }
 
@@ -102,6 +104,7 @@ public class AuthorizationManager : IAuthorizationManager
             });
             
             response.Message = "Для завершения регистрации мы отправили ссылку на вашу почту. Следуйте инструкциям в письме";
+            response.Reason = OperationReasons.EmailConfirmRequired;
         }
 
         return response;
@@ -125,6 +128,8 @@ public class AuthorizationManager : IAuthorizationManager
             {
                 var time = (nextCodeRequestDate - DateTime.UtcNow).ToReadableString();
                 response.Message = $"Запросить код повторно можно будет через {time}";
+                response.Data = time;
+                response.Reason = OperationReasons.CodeTimeout;
                 return response;
             }
         }
@@ -145,6 +150,7 @@ public class AuthorizationManager : IAuthorizationManager
             });
             
             response.Message = "Для восстановления пароля мы отправили ссылку на вашу почту. Следуйте инструкциям в письме";
+            response.Reason = OperationReasons.CodeEmailSent;
         }
 
         return response;
@@ -215,6 +221,7 @@ public class AuthorizationManager : IAuthorizationManager
             {
                 var time = (nextCodeRequestDate - DateTime.UtcNow).ToReadableString();
                 response.Message = $"Запросить код повторно можно будет через {time}";
+                response.Reason = OperationReasons.CodeTimeout;
                 return response;
             }
         }
@@ -235,6 +242,7 @@ public class AuthorizationManager : IAuthorizationManager
             });
             
             response.Message = "Для подтверждения почты мы отправили туда ссылку. Следуйте инструкциям в письме";
+            response.Reason = OperationReasons.CodeEmailSent;
         }
 
         return response;
