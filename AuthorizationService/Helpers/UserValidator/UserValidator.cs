@@ -31,7 +31,7 @@ public static class UserValidator
         {
             if (!user.EmailConfirmed)
             {
-                errorMessage = "Для начала нужно подтвердить адрес электронной почты";
+                errorMessage = "Подтвердите адрес электронной почты. Мы отправили вам письмо с дальнейшими инструкциями";
                 return false;
             }
         }
