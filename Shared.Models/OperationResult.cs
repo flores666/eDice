@@ -13,6 +13,11 @@ public class OperationResult
     
     public object? Data { get; set; }
 
+    /// <summary>
+    /// Причина по которой операция завершилась. Поле должно содержать одно слово в PascalCase или camelCase
+    /// </summary>
+    public string? Reason { get; set; }
+
     public static OperationResult Ok(string? message = null) => new() { IsSuccess = true, Message = message };
-    public static OperationResult Fail(string error) => new() { IsSuccess = false, Message = error };
+    public static OperationResult Fail(string error, string? reason = null) => new() { IsSuccess = false, Message = error, Reason = reason };
 }
