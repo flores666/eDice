@@ -221,6 +221,7 @@ public class AuthorizationManager : IAuthorizationManager
             {
                 var time = (nextCodeRequestDate - DateTime.UtcNow).ToReadableString();
                 response.Message = $"Запросить код повторно можно будет через {time}";
+                response.Data = time;
                 response.Reason = OperationReasons.CodeTimeout;
                 return response;
             }
