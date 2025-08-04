@@ -304,8 +304,8 @@ public class AuthorizationManager : IAuthorizationManager
 
         try
         {
-            await _tokensRepository.UpdateAsync(tokenToPatch);
             await _tokensRepository.CreateTokenAsync(newToken);
+            await _tokensRepository.UpdateAsync(tokenToPatch);
         }
         catch (Exception e)
         {
