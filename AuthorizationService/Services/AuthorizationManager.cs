@@ -267,13 +267,21 @@ public class AuthorizationManager : IAuthorizationManager
             return response;
         }
 
-        var newRefreshToken = TokenGenerator.GenerateRefreshToken(user.Id, request.Ip);
+        var token = TokenGenerator.CreateTokens(user, request.Ip);
+        
         refreshToken.RevokedAt = DateTime.UtcNow;
         refreshToken.RevokedByIp = request.Ip;
-        refreshToken.ReplacedByToken = newRefreshToken.Id;
+        refreshToken.ReplacedByToken = token.RefreshToken.Id;
 
-        response.IsSuccess = await SaveRefreshTokensAsync(refreshToken, newRefreshToken);
-        if (response.IsSuccess) response.Data = TokenGenerator.CreateTokens(user, request.Ip);
+        response.IsSuccess = await SaveRefreshTokensAsync(refreshToken, token.RefreshToken);
+        if (response.IsSuccess)
+        {
+            response.Data = new TokenResultModel
+            {
+                RefreshToken = token.RefreshToken.Token,
+                AccessToken = token.AccessToken
+            };
+        }
 
         return response;
     }

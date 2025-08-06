@@ -48,16 +48,7 @@ public static class AuthorizationApi
         {
             var token = (response.Data as TokenResultModel)?.RefreshToken;
             
-            if (!string.IsNullOrEmpty(token))
-            {
-                httpContext.Response.Cookies.Append("rt", token, new CookieOptions
-                {
-                    Expires = DateTimeOffset.UtcNow.AddMonths(1),
-                    Path = "/",
-                    HttpOnly = true,
-                    SameSite = SameSiteMode.Lax
-                });
-            }
+            if (!string.IsNullOrEmpty(token)) SetRefreshTokenCookie(httpContext, token);
             
             return Results.Ok(response);
         }
@@ -179,8 +170,26 @@ public static class AuthorizationApi
         var request = new RefreshTokenRequest(refreshToken, context.GetUserIp());
         
         var response = await authorizationManager.RefreshTokenAsync(request);
-        if (response.IsSuccess) return Results.Ok(response);
+        if (response.IsSuccess)
+        {
+            var token = (response.Data as TokenResultModel)?.RefreshToken;
+            
+            if (!string.IsNullOrEmpty(token)) SetRefreshTokenCookie(context, token);
+            
+            return Results.Ok(response);
+        }
         
         return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
+    }
+    
+    private static void SetRefreshTokenCookie(HttpContext httpContext, string token)
+    {
+        httpContext.Response.Cookies.Append("rt", token, new CookieOptions
+        {
+            Expires = DateTimeOffset.UtcNow.AddMonths(1),
+            Path = "/",
+            HttpOnly = true,
+            SameSite = SameSiteMode.Lax
+        });
     }
 }
