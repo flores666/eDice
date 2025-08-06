@@ -180,6 +180,8 @@ public static class AuthorizationApi
             return Results.Ok(response);
         }
         
+        context.Response.Cookies.Delete("rt");
+        
         return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
     }
     
