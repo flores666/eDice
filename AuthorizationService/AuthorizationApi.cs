@@ -1,5 +1,6 @@
 using AuthorizationService.Helpers;
 using AuthorizationService.Models;
+using AuthorizationService.Models.Tokens;
 using AuthorizationService.Services;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Lib.Auth;
@@ -43,7 +44,23 @@ public static class AuthorizationApi
 
         request.UserIp = httpContext.GetUserIp();
         response = await authorizationManager.AuthenticateAsync(request);
-        if (response.IsSuccess) return Results.Ok(response);
+        if (response.IsSuccess)
+        {
+            var token = (response.Data as TokenResultModel)?.RefreshToken;
+            
+            if (!string.IsNullOrEmpty(token))
+            {
+                httpContext.Response.Cookies.Append("rt", token, new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddMonths(1),
+                    Path = "/",
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.Lax
+                });
+            }
+            
+            return Results.Ok(response);
+        }
 
         return Results.Json(response, statusCode: StatusCodes.Status401Unauthorized);
     }
@@ -146,7 +163,11 @@ public static class AuthorizationApi
         var request = new RefreshTokenRequest(refreshToken, context.GetUserIp());
         
         var response = await authorizationManager.LogoutAsync(request);
-        if (response.IsSuccess) return Results.Ok(response);
+        if (response.IsSuccess)
+        {
+            context.Response.Cookies.Delete("rt");
+            return Results.Ok(response);
+        }
         
         return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
     }
