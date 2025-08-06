@@ -1,3 +1,4 @@
+using AuthorizationService.Configuration;
 using AuthorizationService.Helpers;
 using AuthorizationService.Models;
 using AuthorizationService.Models.Tokens;
@@ -186,7 +187,7 @@ public static class AuthorizationApi
     {
         httpContext.Response.Cookies.Append("rt", token, new CookieOptions
         {
-            Expires = DateTimeOffset.UtcNow.AddMonths(1),
+            Expires = DateTimeOffset.UtcNow.Add(Constants.RefreshTokenLifeTime),
             Path = "/",
             HttpOnly = true,
             SameSite = SameSiteMode.Lax
