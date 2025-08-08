@@ -6,6 +6,7 @@ using AuthorizationService.Services;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Lib.Auth;
 using Shared.Lib.Extensions;
+using Shared.Logging;
 using Shared.Models;
 
 namespace AuthorizationService;
@@ -24,7 +25,7 @@ public static class AuthorizationApi
         builder.MapPost("/confirm/{code}", Confirm);
 
         builder.MapPost("/refresh", RefreshTokens);
-        builder.MapPost("/logout", Logout).RequireAuthorization();
+        builder.MapPost("/logout", Logout);
         
         return builder;
     }
@@ -164,7 +165,7 @@ public static class AuthorizationApi
         return Results.Json(response, statusCode: StatusCodes.Status500InternalServerError);
     }
     
-    private static async Task<IResult> RefreshTokens(IAuthorizationManager authorizationManager, HttpContext context)
+    private static async Task<IResult> RefreshTokens(IAuthorizationManager authorizationManager, IAppLogger<HttpContext> logger, HttpContext context)
     {
         if (!context.Request.Cookies.TryGetValue("rt", out var refreshToken)) return Results.Unauthorized();
         
