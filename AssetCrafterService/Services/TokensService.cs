@@ -1,4 +1,5 @@
-﻿using AssetCrafterService.Mapper;
+﻿using AssetCrafterService.Helpers;
+using AssetCrafterService.Mapper;
 using AssetCrafterService.Models;
 using Infrastructure.AssetCrafterService;
 using Microsoft.EntityFrameworkCore;
@@ -15,13 +16,25 @@ public class TokensService : ITokensService
         _context = context;
     }
     
-    public async Task<List<TokenDto>> GetTokensAsync(FilterModel filter)
+    public async Task<PaginatedList<TokenDto>> GetTokensAsync(FilterModel filter)
     {
-        return await _context.Tokens
-            .OrderBy(o => o.CreatedAt)
+        var query = _context.Tokens.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(filter.Search))
+        {
+            var toLower = filter.Search.ToLower();
+            query = query.Where(w => w.Name.ToLower().Contains(toLower) || (!string.IsNullOrEmpty(w.Description) && w.Description.Contains(toLower)));
+        }
+
+        if (filter.ConfirmedOnly ?? false) query = query.Where(w => w.IsConfirmed);
+        if (filter.OfficialOnly ?? false) query = query.Where(w => w.IsOfficial);
+        if (filter.PublicOnly ?? false) query = query.Where(w => w.IsPublic);
+        
+        return new PaginatedList<TokenDto>(await query
+            .OrderTokens(filter.Sort)
             .Paginate(filter.Page, filter.Size)
             .Select(s => TokenMapper.ToDto(s))
-            .ToListAsync();
+            .ToListAsync(), await query.CountAsync(), filter.Page, filter.Size);
     }
 
     public async Task<TokenDto?> GetTokenAsync(Guid id)

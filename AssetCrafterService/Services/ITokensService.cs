@@ -5,7 +5,7 @@ namespace AssetCrafterService.Services;
 
 public interface ITokensService
 {
-    public Task<List<TokenDto>> GetTokensAsync(FilterModel filter);
+    public Task<PaginatedList<TokenDto>> GetTokensAsync(FilterModel filter);
     public Task<TokenDto?> GetTokenAsync(Guid id);
     public Task<OperationResult> CreateTokenAsync(TokenDto token);
     public Task<OperationResult> UpdateTokenAsync(TokenDto token);
