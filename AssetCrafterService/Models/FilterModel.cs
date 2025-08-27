@@ -24,4 +24,7 @@ public class FilterModel
     
     [FromQuery(Name = "public")]
     public bool? PublicOnly { get; set; }
+    
+    [FromQuery(Name = "type")]
+    public Guid? TokenType { get; set; }
 }

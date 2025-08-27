@@ -20,6 +20,8 @@ public class TokensService : ITokensService
     {
         var query = _context.Tokens.AsQueryable();
 
+        if (filter.TokenType != null) query = query.Where(x => x.Type == filter.TokenType);
+
         if (!string.IsNullOrWhiteSpace(filter.Search))
         {
             var toLower = filter.Search.ToLower();
