@@ -10,4 +10,5 @@ public interface ITokensService
     public Task<OperationResult> CreateTokenAsync(TokenDto token);
     public Task<OperationResult> UpdateTokenAsync(TokenDto token);
     public Task<OperationResult> DeleteTokenAsync(Guid id);
+    public Task<List<TokenTypeDto>> GetTokenTypesAsync();
 }

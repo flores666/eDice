@@ -32,6 +32,19 @@ public class TokensController : ControllerBase
         return result;
     }
     
+    [HttpGet("types")]
+    [AllowAnonymous]
+    public async Task<OperationResult> GetTokenTypes()
+    {
+        var result = new OperationResult
+        {
+            Data = await _tokensService.GetTokenTypesAsync(),
+            IsSuccess = true
+        };
+
+        return result;
+    }
+    
     [HttpGet("{id:guid}")]
     [AllowAnonymous]
     public async Task<OperationResult> GetToken(Guid id)

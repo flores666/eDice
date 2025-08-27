@@ -81,4 +81,14 @@ public class TokensService : ITokensService
         
         return OperationResult.Fail("Что-то пошло не так, изменения сохранить не удалось");
     }
+
+    public async Task<List<TokenTypeDto>> GetTokenTypesAsync()
+    {
+        return await _context.TokenTypes.Select(s => new TokenTypeDto
+        {
+            Id = s.Id,
+            Caption = s.Caption,
+            Name = s.Name
+        }).ToListAsync();
+    }
 }
