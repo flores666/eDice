@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		compose.yaml = compose.yaml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationService", "AuthorizationService\AuthorizationService.csproj", "{53CBA1BB-F207-4306-A18B-349744926618}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountService", "AccountService\AccountService.csproj", "{53CBA1BB-F207-4306-A18B-349744926618}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GatewayService", "GatewayService\GatewayService.csproj", "{E5A3C638-28EE-41B4-A662-4719D18A23A4}"
 EndProject
@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C7
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Lib", "Shared.Lib\Shared.Lib.csproj", "{808732B3-4495-4E66-9163-968902DDD3CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.AuthorizationService", "Infrastructure.AuthorizationService\Infrastructure.AuthorizationService.csproj", "{24655406-8AD7-4930-A094-19EDFD8B78E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.AccountService", "Infrastructure.AccountService\Infrastructure.AccountService.csproj", "{24655406-8AD7-4930-A094-19EDFD8B78E6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailService", "MailService\MailService.csproj", "{0F6E8D27-428C-4B80-A86C-CA7741A7B998}"
 EndProject

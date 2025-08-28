@@ -1,0 +1,54 @@
+﻿using Infrastructure.AccountService;
+using Infrastructure.AccountService.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace AccountService.Repository;
+
+public class PostgresUsersRepository : IUsersRepository
+{
+    private readonly PostgresContext _context;
+
+    public PostgresUsersRepository(PostgresContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<User?> GetUserByLoginAsync(string login)
+    {
+        if (string.IsNullOrEmpty(login)) return null;
+        return await _context.Users.FirstOrDefaultAsync(w => w.Email.ToLower() == login.ToLower());
+    }
+
+    public async Task<User?> GetUserByIdAsync(Guid userId)
+    {
+        return await _context.Users.FindAsync(userId);
+    }
+
+    public async Task<bool> CreateUserAsync(User model)
+    {
+        _context.Users.Add(model);
+        return await _context.SaveChangesAsync() > 0;
+    }
+
+    public async Task<bool> UpdateUserAsync(User user)
+    {
+        if (user.Id == Guid.Empty) return false;
+
+        var trackedUser = _context.ChangeTracker.Entries<User>().FirstOrDefault(w => w.Entity.Id == user.Id);
+        if (trackedUser != null)
+        {
+            trackedUser.CurrentValues.SetValues(user);
+        }
+        else
+        {
+            _context.Users.Attach(user);
+            _context.Entry(user).State = EntityState.Modified;
+        }
+
+        return await _context.SaveChangesAsync() > 0;
+    }
+
+    public async Task<User?> GetUserByRestoreCodeAsync(string code) => await _context.Users
+        .Where(w => !string.IsNullOrEmpty(w.ResetCode))
+        .FirstOrDefaultAsync(w => w.ResetCode!.ToLower() == code.ToLower());
+}

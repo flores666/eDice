@@ -9,7 +9,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "authorization",
+          "Host": "accountservice",
           "Port": 81
         }
       ]

@@ -46,14 +46,14 @@
     environment:
       - ASPNETCORE_URLS=http://+:82
 
-  authorization:
+  accountservice:
     build:
       context: .
-      dockerfile: AuthorizationService/Dockerfile
+      dockerfile: AccountService/Dockerfile
     env_file:
       - .env
-      - ./AuthorizationService/.env
-    container_name: AuthorizationService
+      - ./AccountService/.env
+    container_name: AccountService
     depends_on:
       kafka:
         condition: service_healthy
@@ -120,7 +120,6 @@
       dockerfile: UsersCoordinatorService/Dockerfile
     env_file:
       - .env
-      - ./UsersCoordinatorService/.env
     container_name: UsersCoordinatorService
     depends_on:
       kafka:
