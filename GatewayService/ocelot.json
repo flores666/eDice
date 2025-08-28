@@ -1,51 +1,71 @@
 {
-  "Routes": [
-    {
-      "UpstreamHttpMethod": [
-        "Post"
-      ],
-      "UpstreamPathTemplate": "/auth/{action}",
-      "DownstreamPathTemplate": "/{action}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+    "Routes": [
         {
-          "Host": "accountservice",
-          "Port": 81
+            "UpstreamHttpMethod": [
+                "Post"
+            ],
+            "UpstreamPathTemplate": "/auth/{action}",
+            "DownstreamPathTemplate": "/auth/{action}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "accountservice",
+                    "Port": 81
+                }
+            ]
+        },
+        {
+            "UpstreamHttpMethod": [
+                "Get",
+                "Post",
+                "Delete",
+                "Patch"
+            ],
+            "UpstreamPathTemplate": "/profile/{action}",
+            "DownstreamPathTemplate": "/profile/{action}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "accountservice",
+                    "Port": 81
+                }
+            ]
+        },
+        {
+            "UpstreamHttpMethod": [
+                "Get",
+                "Post",
+                "Delete",
+                "Patch"
+            ],
+            "UpstreamPathTemplate": "/asset-crafter/tokens",
+            "DownstreamPathTemplate": "/tokens",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "assetcrafterservice",
+                    "Port": 85
+                }
+            ]
+        },
+        {
+            "UpstreamHttpMethod": [
+                "Get"
+            ],
+            "UpstreamPathTemplate": "/asset-crafter/tokens/{id}",
+            "DownstreamPathTemplate": "/tokens/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "assetcrafterservice",
+                    "Port": 85
+                }
+            ]
         }
-      ]
+    ],
+    "GlobalConfiguration": {
+        "BaseUrl": "http://localhost:5002"
     },
-    {
-      "UpstreamHttpMethod": [
-        "Get", "Post", "Delete", "Patch"
-      ],
-      "UpstreamPathTemplate": "/asset-crafter/tokens",
-      "DownstreamPathTemplate": "/tokens",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "assetcrafterservice",
-          "Port": 85
-        }
-      ]
-    },
-    {
-      "UpstreamHttpMethod": [
-        "Get"
-      ],
-      "UpstreamPathTemplate": "/asset-crafter/tokens/{id}",
-      "DownstreamPathTemplate": "/tokens/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "assetcrafterservice",
-          "Port": 85
-        }
-      ]
-    }
-  ],
-  "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5002"
-  },
-  "DynamicRoutes": [],
-  "Aggregates": []
+    "DynamicRoutes": [],
+    "Aggregates": []
 }

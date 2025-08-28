@@ -16,4 +16,11 @@ public static class Extensions
         
         return serviceCollection;
     }
+
+    public static IServiceCollection AddProfileServices(this IServiceCollection serviceCollection)
+    {
+        serviceCollection.AddScoped<IUsersService, UsersService>();
+
+        return serviceCollection;
+    }
 }

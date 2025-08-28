@@ -56,6 +56,7 @@ app.UseAuthorization();
 
 app.MapHealthChecks();
 app.MapAuthorizationApi();
+app.MapProfileApi();
 app.UseHsts();
 
 app.Run();

@@ -15,17 +15,17 @@ public static class AuthorizationApi
 {
     public static IEndpointRouteBuilder MapAuthorizationApi(this IEndpointRouteBuilder builder)
     {
-        builder.MapPost("/login", Login).RequireAuthorization("DenyAuthenticated");
-        builder.MapPost("/register", Register).RequireAuthorization("DenyAuthenticated");
+        builder.MapPost("/auth/login", Login).RequireAuthorization("DenyAuthenticated");
+        builder.MapPost("/auth/register", Register).RequireAuthorization("DenyAuthenticated");
         
-        builder.MapPost("/restore", RequestRestorePassword);
-        builder.MapPost("/restore/{code}", RestorePassword);
+        builder.MapPost("/auth/restore", RequestRestorePassword);
+        builder.MapPost("/auth/restore/{code}", RestorePassword);
         
-        builder.MapPost("/confirm", RequestConfirm);
-        builder.MapPost("/confirm/{code}", Confirm);
+        builder.MapPost("/auth/confirm", RequestConfirm);
+        builder.MapPost("/auth/confirm/{code}", Confirm);
 
-        builder.MapPost("/refresh", RefreshTokens);
-        builder.MapPost("/logout", Logout);
+        builder.MapPost("/auth/refresh", RefreshTokens);
+        builder.MapPost("/auth/logout", Logout);
         
         return builder;
     }
